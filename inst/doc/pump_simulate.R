@@ -19,21 +19,18 @@ model.params.list <- list(
   ################################################## impact
   , MDES = 0.125                    # minimum detectable effect size      
   ################################################## level 3: districts
-  , numCovar.3 = 1                  # number of district covariates
   , R2.3 = 0.1                      # percent of district variation
                                       # explained by district covariates
   , ICC.3 = 0.2                     # district intraclass correlation
   , omega.3 = 0.1                   # ratio of district effect size variability
                                       # to random effects variability
   ################################################## level 2: schools
-  , numCovar.2 = 1                  # number of school covariates
   , R2.2 = 0.1                      # percent of school variation
                                     # explained by school covariates
   , ICC.2 = 0.2                     # school intraclass correlation	
   , omega.2 = 0.1                   # ratio of school effect size variability
                                       # to random effects variability
   ################################################## level 1: individuals
-  , numCovar.1 = 1                  # number of individual covariates
   , R2.1 = 0.1                      # percent of indiv variation explained
                                       # by indiv covariates
 )
@@ -56,7 +53,6 @@ model.params.list <- list(
 #    , Xi0 = 0                         # scalar grand mean outcome under no treatment
 #    , MDES = rep(0.125, M)            # minimum detectable effect size
 #    ################################################## level 3: districts
-#    , numCovar.3 = 1                  # number of district covariates
 #    , R2.3 = rep(0.1, M)              # percent of district variation
 #                                        # explained by district covariates
 #    , rho.V = default.rho.matrix      # MxM correlation matrix of district covariates
@@ -68,7 +64,6 @@ model.params.list <- list(
 #    , kappa.w =  default.kappa.matrix # MxM matrix of correlations between district
 #                                        # random effects and impacts
 #    ################################################## level 2: schools
-#    , numCovar.2 = 1                  # number of school covariates
 #    , R2.2 = rep(0.1, M)              # percent of school variation
 #                                        # explained by school covariates
 #    , rho.X = default.rho.matrix      # MxM correlation matrix of school covariates
@@ -80,7 +75,6 @@ model.params.list <- list(
 #    , kappa.u = default.kappa.matrix  # MxM matrix of correlations between school
 #                                        # random effects and impacts
 #    ################################################## level 1: individuals
-#    , numCovar.1 = 1                  # number of individual covariates
 #    , R2.1 = rep(0.1, M)              # percent of indiv variation explained
 #                                        # by indiv covariates
 #    , rho.C = default.rho.matrix      # MxM correlation matrix of individual covariates
@@ -88,18 +82,21 @@ model.params.list <- list(
 #  )
 
 ## -----------------------------------------------------------------------------
-d_m <- 'd3.3_m3rc2rc'
-dgp.params.list <- convert_params(model.params.list)
-sim.data.full <- gen_full_data(dgp.params.list)
+sim.data <- gen_sim_data(d_m = 'd3.3_m3rc2rc', model.params.list, Tbar = 0.5)
 
 ## -----------------------------------------------------------------------------
-T.x <- gen_T.x(
-    d_m = d_m, S.id = sim.data.full$ID$S.id, D.id = sim.data.full$ID$D.id,
-    nbar = model.params.list$nbar, Tbar = 0.5
-)
-sim.data.obs <- sim.data.full
-sim.data.obs$Yobs <- gen_Yobs(sim.data.full, T.x)
+dgp.params.list <- convert_params(model.params.list)
 
-## ---- echo = FALSE------------------------------------------------------------
-str(sim.data.obs)
+## -----------------------------------------------------------------------------
+sim.data <- gen_base_sim_data(dgp.params.list)
+
+## -----------------------------------------------------------------------------
+d_m <- 'd3.3_m3rc2rc'
+sim.data$T.x <- gen_T.x(
+    d_m = d_m,
+    S.id = sim.data$ID$S.id,
+    D.id = sim.data$ID$D.id,
+    Tbar = 0.5
+)
+sim.data$Yobs <- gen_Yobs(sim.data, T.x = sim.data$T.x)
 

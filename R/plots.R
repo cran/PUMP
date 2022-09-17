@@ -95,15 +95,7 @@ get_sample_size_scale <- function(
 #' @inheritParams power_curve
 #' 
 #' @return plot; a ggplot object of power across values.
-#'
-#' @export
-#'
-#' @examples
-#' mdes <- pump_mdes(d_m = "d2.1_m2fc", MTP = 'HO',
-#'   power.definition = 'D1indiv', target.power = 0.7,
-#'   J = 60, nbar = 50, M = 3, Tbar = 0.5, alpha = 0.05,
-#'   numCovar.1 = 1, R2.1 = 0.1, ICC.2 = 0.05, rho = 0.2)
-#' plot_power_curve(mdes)
+#' @keywords internal
 plot_power_curve <- function( pwr, plot.points = TRUE,
                               all = TRUE,
                               low = NULL, high = NULL,
@@ -197,18 +189,7 @@ plot_power_curve <- function( pwr, plot.points = TRUE,
 #'  (a ggpubr arrangement of 3 plots, technically) of the
 #'  search path.
 #'
-#' @export
-#' 
-#' @examples
-#'J <- pump_sample(d_m = "d2.1_m2fc",
-#'    MTP = 'HO', power.definition = 'D1indiv',
-#'    typesample = 'J', target.power = 0.6,
-#'    nbar = 50, M = 3, MDES = 0.125,
-#'    Tbar = 0.5, alpha = 0.05,
-#'    numCovar.1 = 1, R2.1 = 0.1, ICC.2 = 0.05, 
-#'    rho = 0.2, tnum = 1000)
-#' plot_power_search(J)
-#'
+#' @keywords internal
 plot_power_search <- function( pwr, fit = NULL, target.line = NULL) {
   if ( is.pumpresult(pwr) ) {
     test.pts <- search_path(pwr)
@@ -271,37 +252,77 @@ plot_power_search <- function( pwr, fit = NULL, target.line = NULL) {
 }
 
 
-#' @title Plot a single scenario pump object (result function)
-#' 
-#' @description Works on an object returned by pump_power(),
-#' and visualizes different definitions of power across
-#' MTPs. This function does not apply to pump_mdes()
-#' or pump_sample() objects, as these functions only
-#' return a single value.
+#' @title Plot a pumpresult object (result function)
+#'
+#' @description For the object returned by pump_power(), visualizes
+#'   different definitions of power across MTPs. For the object
+#'   returned by pump_mdes() or pump_sample(), plot a power curve as a
+#'   function of MDES or sample size, respectively.  This latter call
+#'   will do a grid search over a passed range from low to high to
+#'   generate this curve.
+#'
+#'   Several of the passed parameters only apply to the mdes or sample
+#'   versions, and are for controlling the grid search and plot.
 #'
 #' @param x pumpresult object.
-#' @param ... additional parameters.
+#' @param type string; "power" or "search". Specifies whether to plot
+#'   the default power graph, or the search path. The search path is
+#'   only valid for MDES and SS results.
+#' @param low Low range of x-axis and curve calculation for sample or
+#'   MDES plots.  (Optional.)
+#' @param high High range of x-axis and curve calculation. (Optional.)
+#' @param all Logical. If TRUE, merge in the search path from the
+#'   original search to the estimated power curve, for MDES or sample
+#'   plots.
+#' @param grid.size If calculating curve for sample or MDES plot, how
+#'   many grid points?
+#' @param breaks If plotting a curve for sample or MDES, where to put
+#'   the grid points?
+#' @param ... additional parameters, such as, in case of sample or
+#'   mdes objects, tnum for setting number of replicates or all
+#'   (logical) for determining whether to include original points in
+#'   the estimated curve, or include.points  (logical) for including
+#'   points on the plot itself.
 #'
-#' @return plot; a ggplot object of power across
-#' differen definitions.
+#' @return plot; a ggplot object of power across different
+#'   definitions.
 #'
 #' @export
 #'
-#' @examples 
+#' @examples
 #' pp1 <- pump_power(d_m = "d2.2_m2rc", MTP = 'HO',
 #'  nbar = 50, J = 20, M = 8, numZero = 5,
 #'  MDES = 0.30, Tbar = 0.5, alpha = 0.05, two.tailed = FALSE,
-#'  numCovar.1 = 1, numCovar.2 = 1, R2.1 = 0.1, R2.2 = 0.7, 
-#'  ICC.2 = 0.05, rho = 0.2, tnum = 5000)
-#'  
+#'  numCovar.1 = 1, numCovar.2 = 1, R2.1 = 0.1, R2.2 = 0.7,
+#'  ICC.2 = 0.05, rho = 0.2, tnum = 200)
+#'
 #' plot(pp1)
-
-plot.pumpresult <- function( x, ... )
+#'
+#' J <- pump_sample(d_m = "d2.1_m2fc",
+#'    MTP = 'HO', power.definition = 'D1indiv',
+#'    typesample = 'J', target.power = 0.6,
+#'    nbar = 50, M = 3, MDES = 0.125,
+#'    Tbar = 0.5, alpha = 0.05,
+#'    numCovar.1 = 1, R2.1 = 0.1, ICC.2 = 0.05,
+#'    rho = 0.2, tnum = 200)
+#' plot(J)
+#' plot(J, type = "search")
+#' 
+plot.pumpresult <- function( x, type = "power", 
+                             all = TRUE,
+                             low = NULL, high = NULL,
+                             grid.size = 5,
+                             breaks = grid.size, ... )
 {
   stopifnot( is.pumpresult( x ) )
+  stopifnot( type %in% c("power", "search") )
   
-  if(pump_type(x) == 'power')
+  if(pump_type(x) == "power")
   {
+    if( type == "search" )
+    {
+      stop("Invalid plot type.")
+    }
     if(attr( x, "long.table" ))
     {
       x <- transpose_power_table(x)
@@ -356,12 +377,17 @@ plot.pumpresult <- function( x, ... )
     return(ss.plot)
     
   } else if( pump_type(x) %in% c('mdes', 'sample') ) {
-    low <- NULL
-    if ( pump_type( x ) == "mdes" ) {
-      low <- 0  
-    }
     
-    return( plot_power_curve(x, low=low, ... ) )
+    if( type == "power" ) {
+      if ( is.null( low ) && pump_type( x ) == "mdes" ) {
+        low <- 0  
+      }
+      return( plot_power_curve(x, low = low, high = high,
+                               grid.size = grid.size,
+                               breaks = breaks, ... ) )
+    } else {
+      return( plot_power_search(x, ... ) )
+    }
   } else {
     stop('Invalid pumpresult type.')
   }
@@ -540,6 +566,8 @@ fetch_power_type <- function( x, power.definition ) {
   return( powerType )
 }
 
+
+
 handle_power_definition <- function( 
   x, power.definition, outcome, var.vary, include.title 
 ) {
@@ -605,6 +633,7 @@ handle_power_definition <- function(
 #' @keywords internal
 plot.pumpgridresult.mdes <- function( 
   x, power.definition = NULL, var.vary, 
+  color = "MTP",
   lines = TRUE, include.title = FALSE, ...  
 )
 {
@@ -619,7 +648,12 @@ plot.pumpgridresult.mdes <- function(
   
   # Aggregate data, if multiple things varying
   var_names <- setdiff( attr( x, "var_names" ), 
-                        c( "MTP", "power.definition" ) )
+                        c( color, "power.definition" ) )
+  
+  if ( "MTP" %in% var_names ) {
+      stop( "Cannot have multiple MTP for plotting if color not set to MTP" )
+  }
+  
   if ( length( var_names ) > 1 ) {
     plot.data <- plot.data %>%
       dplyr::group_by( dplyr::across( c( "MTP", var.vary ) ) ) %>%
@@ -635,13 +669,15 @@ plot.pumpgridresult.mdes <- function(
   plot.data <- plot.data %>%
     dplyr::mutate(Adjusted.MDES = as.numeric(.data$Adjusted.MDES))
   
+  # ensure our color is a factor
+  plot.data[ color ] <- as.factor( plot.data[[color]] )
   
   grid.plot <- ggplot2::ggplot(
     data = plot.data,
     ggplot2::aes_string(x = var.vary,
                         y = "Adjusted.MDES",
-                        color = "MTP",
-                        shape = "MTP"))
+                        color = color,
+                        shape = color))
   
   if ( lines ) {
     grid.plot <- grid.plot +
@@ -653,12 +689,19 @@ plot.pumpgridresult.mdes <- function(
                           position = ggplot2::position_dodge(width = 0.125))
   }
   
+  c_title <- color
+  
+  x_lab <- var.vary
+  if ( M > 1 ) {
+      x_lab = paste0(var.vary, " (same across all outcomes)")
+  }
+  
   grid.plot <- grid.plot +
     ggplot2::ggtitle( res$title ) + 
-    ggplot2::labs(x = paste0(var.vary, " (same across all outcomes)"),
+    ggplot2::labs(x = x_lab,
                   y = "MDES",
-                  color = "",
-                  shape = "") +
+                  color = c_title,
+                  shape = c_title) +
     ggplot2::theme_minimal() +
     ggplot2::theme(plot.title = ggplot2::element_text(size = 16,
                                                       face = "bold",
@@ -687,6 +730,7 @@ plot.pumpgridresult.mdes <- function(
 #' @keywords internal
 plot.pumpgridresult.sample <- function( 
   x, power.definition = NULL, var.vary, 
+  color = "MTP",
   lines = TRUE, include.title = FALSE, ...  
 ) {
   dots <- list( ... )
@@ -700,19 +744,21 @@ plot.pumpgridresult.sample <- function(
     include.title = include.title, var.vary = var.vary )
   
   plot.data <- res$plot.data
-  
+
   # Aggregate data, if multiple things varying
   var_names <- setdiff( attr( x, "var_names" ), 
-                        c( "MTP", "power.definition" ) )
+                        c( color, "power.definition" ) )
   if ( length( var_names ) > 1 ) {
     plot.data <- plot.data %>%
-      dplyr::group_by( dplyr::across( c( "MTP", var.vary ) ) ) %>%
-      dplyr::summarise( Sample.size = mean( .data$Sample.size ) )
+      dplyr::group_by( dplyr::across( c( color, var.vary ) ) ) %>%
+      dplyr::summarise( Sample.size = mean( .data$Sample.size, na.rm=TRUE ) )
     
     smessage('Note: Averaged Sample.size across other 
                  varying factors in grid: %s',
              paste0( setdiff( var_names, var.vary ), collapse = ", " ) )
   }
+  
+  plot.data = dplyr::filter( plot.data, !is.na( .data$Sample.size ) )
   
   # for nice axes
   if(max(plot.data$Sample.size) - min(plot.data$Sample.size) < 5)
@@ -729,13 +775,16 @@ plot.pumpgridresult.sample <- function(
     unique(floor(pretty(seq(ymin, (ymax + 1) * 1.1)))) 
   }
   
+  # ensure our color is a factor
+  plot.data[ color ] <- as.factor( plot.data[[color]] )
+  
   
   grid.plot <- ggplot2::ggplot(
     data = plot.data,
     ggplot2::aes_string(x = var.vary,
                         y = "Sample.size",
-                        color = "MTP",
-                        shape = "MTP"))
+                        color = color,
+                        shape = color))
   
   if ( lines ) {
     grid.plot <- grid.plot +
@@ -747,11 +796,16 @@ plot.pumpgridresult.sample <- function(
       position = ggplot2::position_dodge(width = 0.125))
   }
   
+  x_lab <- var.vary
+  if ( params(x)$M > 1 ) {
+      x_lab <- paste0(var.vary, " (same across all outcomes)")
+  }
+  
   grid.plot <- grid.plot + 
     ggplot2::scale_y_continuous(limits = c(ymin, ymax),
                                 breaks = integer.breaks(ymin, ymax)) + 
     ggplot2::ggtitle( res$title ) +
-    ggplot2::labs(x = paste0(var.vary, " (same across all outcomes)"),
+    ggplot2::labs(x = x_lab,
                   y = "Sample size",
                   color = "",
                   shape = "") +
@@ -775,29 +829,32 @@ plot.pumpgridresult.sample <- function(
 }
 
 
-#'@title Plot a pump grid result object (result function)
+#'@title Plot a pumpgridresult object (result function)
 #'
 #'@description
 #'
-#'Plots grid results across values of a single parameter, specified by the user
-#'using var.vary, for a single definition of power, specified by
-#'power.definition.
+#'Plots grid results across values of a single parameter, specified by
+#'the user using var.vary, for a single definition of power, specified
+#'by power.definition.
 #'
-#'If multiple things vary in the grid, the outcome (power, mdes, or sample size)
-#'will be averaged (marginalized) across the other varying factors. This treats
-#'the grid as a multifactor simulation, with this showing the "main effect" of
-#'the specified parameter.
+#'If multiple things vary in the grid, the outcome (power, mdes, or
+#'sample size) will be averaged (marginalized) across the other
+#'varying factors. This treats the grid as a multifactor simulation,
+#'with this showing the "main effect" of the specified parameter.
+#'
 #'
 #'@param x pumpgridresult object.
-#'@param power.definition string; definition of power to plot.  
-#' If NULL, plot all definitions as a facet wrap.
-#'@param var.vary string; variable to vary on X axis.  
-#' If NULL, and only one thing varies, then it will default 
-#' to single varying parameter.
-#'@param lines logical; TRUE means connect dots with lines on the plots.  
-#' FALSE means no lines.
-#'@param include.title logical; whether to include/exclude title 
-#' (if planning a facet wrap, for example).
+#'@param power.definition string; definition of power to plot. If
+#'  NULL, plot all definitions as a facet wrap.
+#'@param var.vary string; variable to vary on X axis. If NULL, and
+#'  only one thing varies, then it will default to single varying
+#'  parameter.
+#'@param color string; Group lines by this element to make an
+#'  interaction plot (default "MTP", giving one curve for each MTP).
+#'@param lines logical; TRUE means connect dots with lines on the
+#'  plots. FALSE means no lines.
+#'@param include.title logical; whether to include/exclude title (if
+#'  planning a facet wrap, for example).
 #'@param ... additional parameters.
 #'
 #'@return plot; a ggplot object of outcome across parameter values.
@@ -814,13 +871,15 @@ plot.pumpgridresult.sample <- function(
 
 plot.pumpgridresult <- function( 
   x, power.definition = NULL, var.vary = NULL, 
+  color = "MTP",
   lines = TRUE, include.title = FALSE, ... 
 )
 {
   # validation
   stopifnot( is.pumpgridresult( x ) )
   
-  var_names <- setdiff( attr(x, "var_names" ), c( "MTP", "power.definition" ) )
+  var_names <- setdiff( attr(x, "var_names" ),
+                        c( "MTP", color, "power.definition" ) )
   
   if ( is.null( var_names ) ) {
     stop( "No list of varying design elements found in pump grid result" )
@@ -833,7 +892,7 @@ plot.pumpgridresult <- function(
     }
   } else {
     if ( length( var_names ) > 1 ) {
-      
+      # Make a separate plot for each varying element!
       mps <- purrr::map( 
         var_names, plot.pumpgridresult, x = x, 
         power.definition = power.definition, include.title = FALSE, ... )
@@ -847,27 +906,28 @@ plot.pumpgridresult <- function(
                           paste0( var_names, collapse = ", " ) ) )
       
       return( gd )
+    } else {
+        var.vary <- var_names
     }
-    var.vary <- var_names
   }
   
   
   if(pump_type(x) == 'power') {
     
     grid.plot <- plot.pumpgridresult.power(
-      x, power.definition = power.definition,
+      x, power.definition = power.definition, color = color,
       var.vary = var.vary, lines = lines, include.title = include.title, ... )
     
   } else if (pump_type(x) == 'mdes') {
     
     grid.plot <- plot.pumpgridresult.mdes(
-      x, power.definition = power.definition,
+      x, power.definition = power.definition, color = color,
       var.vary = var.vary, lines = lines, include.title = include.title, ... )
     
   } else if(pump_type(x) == 'sample') {
     
     grid.plot <- plot.pumpgridresult.sample(
-      x, power.definition = power.definition,
+      x, power.definition = power.definition, color = color,
       var.vary = var.vary, lines = lines, include.title = include.title, ... )
     
   } else {

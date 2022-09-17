@@ -1,6 +1,10 @@
 ## ----initialize, include = FALSE----------------------------------------------
 library( PUMP )
-recompile <- FALSE
+
+# This allows us to stash precalculated results so the vignette
+# compiles in a timely manner for CRAN.
+vignette_cache <- here::here("vignettes/output", "MDEScalc.RDS")
+recompile <- !file.exists(vignette_cache)
 
 knitr::opts_chunk$set(
   cache = FALSE,
@@ -67,10 +71,10 @@ if(recompile)
       ICC.2 = 0.05, ICC.3 = 0.4,    # intraclass correlation coefficients
       rho = 0.4 ) 
     
-    saveRDS(m, here::here("vignettes/output", "MDEScalc.RDS"))
+    saveRDS(m,  here::here("vignettes/output", "MDEScalc.RDS"))
 } else
 {
-    m <- readRDS(here::here("vignettes/output", "MDEScalc.RDS"))
+    m <- readRDS( here::here("vignettes/output", "MDEScalc.RDS") )
 }
 
 ## ----echo = TRUE--------------------------------------------------------------

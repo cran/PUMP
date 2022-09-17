@@ -25,6 +25,7 @@
     </style>
 
 
+
 <style type="text/css">
   code {
     white-space: pre;
@@ -78,13 +79,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -130,21 +138,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   ################################################## impact
   , <span class="dt">MDES =</span> <span class="fl">0.125</span>                    <span class="co"># minimum detectable effect size      </span>
   ################################################## level 3: districts
-  , <span class="dt">numCovar.3 =</span> <span class="dv">1</span>                  <span class="co"># number of district covariates</span>
   , <span class="dt">R2.3 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of district variation</span>
                                       <span class="co"># explained by district covariates</span>
   , <span class="dt">ICC.3 =</span> <span class="fl">0.2</span>                     <span class="co"># district intraclass correlation</span>
   , <span class="dt">omega.3 =</span> <span class="fl">0.1</span>                   <span class="co"># ratio of district effect size variability</span>
                                       <span class="co"># to random effects variability</span>
   ################################################## level 2: schools
-  , <span class="dt">numCovar.2 =</span> <span class="dv">1</span>                  <span class="co"># number of school covariates</span>
   , <span class="dt">R2.2 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of school variation</span>
                                     <span class="co"># explained by school covariates</span>
   , <span class="dt">ICC.2 =</span> <span class="fl">0.2</span>                     <span class="co"># school intraclass correlation </span>
   , <span class="dt">omega.2 =</span> <span class="fl">0.1</span>                   <span class="co"># ratio of school effect size variability</span>
                                       <span class="co"># to random effects variability</span>
   ################################################## level 1: individuals
-  , <span class="dt">numCovar.1 =</span> <span class="dv">1</span>                  <span class="co"># number of individual covariates</span>
   , <span class="dt">R2.1 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of indiv variation explained</span>
                                       <span class="co"># by indiv covariates</span>
 )</code></pre></div>
@@ -167,7 +172,6 @@ model.params.list &lt;-<span class="st"> </span><span class="kw">list</span>(
   , <span class="dt">Xi0 =</span> <span class="dv">0</span>                         <span class="co"># scalar grand mean outcome under no treatment</span>
   , <span class="dt">MDES =</span> <span class="kw">rep</span>(<span class="fl">0.125</span>, M)            <span class="co"># minimum detectable effect size      </span>
   ################################################## level 3: districts
-  , <span class="dt">numCovar.3 =</span> <span class="dv">1</span>                  <span class="co"># number of district covariates</span>
   , <span class="dt">R2.3 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of district variation</span>
                                       <span class="co"># explained by district covariates</span>
   , <span class="dt">rho.V =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of district covariates</span>
@@ -179,7 +183,6 @@ model.params.list &lt;-<span class="st"> </span><span class="kw">list</span>(
   , <span class="dt">kappa.w =</span>  default.kappa.matrix <span class="co"># MxM matrix of correlations between district</span>
                                       <span class="co"># random effects and impacts</span>
   ################################################## level 2: schools
-  , <span class="dt">numCovar.2 =</span> <span class="dv">1</span>                  <span class="co"># number of school covariates</span>
   , <span class="dt">R2.2 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of school variation</span>
                                       <span class="co"># explained by school covariates</span>
   , <span class="dt">rho.X =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of school covariates</span>
@@ -191,7 +194,6 @@ model.params.list &lt;-<span class="st"> </span><span class="kw">list</span>(
   , <span class="dt">kappa.u =</span> default.kappa.matrix  <span class="co"># MxM matrix of correlations between school</span>
                                       <span class="co"># random effects and impacts</span>
   ################################################## level 1: individuals
-  , <span class="dt">numCovar.1 =</span> <span class="dv">1</span>                  <span class="co"># number of individual covariates</span>
   , <span class="dt">R2.1 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of indiv variation explained</span>
                                       <span class="co"># by indiv covariates</span>
   , <span class="dt">rho.C =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of individual covariates</span>
@@ -200,36 +202,27 @@ model.params.list &lt;-<span class="st"> </span><span class="kw">list</span>(
 </div>
 <div id="simulate-data" class="section level1">
 <h1>Simulate data</h1>
-<p>The user-given parameters are then converted into parameters that inform the data-generating process (DGP). For example, a certain value of <span class="math inline">\(R^2\)</span> is converted in a coefficient value. Then, the user can generate a full set of simulated data. The simulated data includes both unobserved and unobserved quantities, such as both potential outcomes.</p>
+<p>Once the user has chosen the model parameters, the only remaining choice is <code>Tbar</code>, the proportion of units assigned to the treatment. This parameter is not considered a modeling parameter as it instead informs the randomization process.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim.data &lt;-<span class="st"> </span><span class="kw">gen_sim_data</span>(<span class="dt">d_m =</span> <span class="st">'d3.3_m3rc2rc'</span>, model.params.list, <span class="dt">Tbar =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p>The final output contains a list of the following vectors: - potential outcomes <code>Y0</code> and <code>Y1</code>. - observed outcomes <code>Yobs</code>. - treatment assignment <code>T.x</code>. - covariates at each level: level 3 <code>V.k</code>, level 2 <code>X.jk</code>, level 1 <code>C.ijk</code>. - ID assignments at each level: level 2 <code>S.id</code>, level 3 <code>D.id</code>.</p>
+<p>Note that the simulated data contains both observed parameters and unobserved parameters (the unobserved potential outcome, depending on treatment assignment).</p>
+</div>
+<div id="simulation-process" class="section level1">
+<h1>Simulation process</h1>
+<p>We briefly walk through the steps conducted by the <code>gen_sim_data</code> function in case the user wants to inspect intermediate steps of the process.</p>
+<p>First, the user-given parameters are then converted into parameters that inform the data-generating process (DGP). For example, a certain value of <span class="math inline">\(R^2\)</span> is converted in a coefficient value.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dgp.params.list &lt;-<span class="st"> </span><span class="kw">convert_params</span>(model.params.list)</code></pre></div>
+<p>Next, we generate a set of full simulation data, but without assuming any treatment assignment has occurred. The simulated data includes both unobserved and unobserved quantities, such as both potential outcomes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim.data &lt;-<span class="st"> </span><span class="kw">gen_base_sim_data</span>(dgp.params.list)</code></pre></div>
+<p>Finally, we generate the treatment assignment, and the observed outcomes <span class="math inline">\(Y^{obs}\)</span>. At this point, we need to specify the design and <code>Tbar</code> to generate the correct treatment assignment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_m &lt;-<span class="st"> 'd3.3_m3rc2rc'</span>
-dgp.params.list &lt;-<span class="st"> </span><span class="kw">convert_params</span>(model.params.list)
-sim.data.full &lt;-<span class="st"> </span><span class="kw">gen_full_data</span>(dgp.params.list)</code></pre></div>
-<p>Finally, we generate the treatment assignment, and the observed outcomes <span class="math inline">\(Y^{obs}\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">T.x &lt;-<span class="st"> </span><span class="kw">gen_T.x</span>(
-    <span class="dt">d_m =</span> d_m, <span class="dt">S.id =</span> sim.data.full<span class="op">$</span>ID<span class="op">$</span>S.id, <span class="dt">D.id =</span> sim.data.full<span class="op">$</span>ID<span class="op">$</span>D.id,
-    <span class="dt">nbar =</span> model.params.list<span class="op">$</span>nbar, <span class="dt">Tbar =</span> <span class="fl">0.5</span>
+sim.data<span class="op">$</span>T.x &lt;-<span class="st"> </span><span class="kw">gen_T.x</span>(
+    <span class="dt">d_m =</span> d_m,
+    <span class="dt">S.id =</span> sim.data<span class="op">$</span>ID<span class="op">$</span>S.id,
+    <span class="dt">D.id =</span> sim.data<span class="op">$</span>ID<span class="op">$</span>D.id,
+    <span class="dt">Tbar =</span> <span class="fl">0.5</span>
 )
-sim.data.obs &lt;-<span class="st"> </span>sim.data.full
-sim.data.obs<span class="op">$</span>Yobs &lt;-<span class="st"> </span><span class="kw">gen_Yobs</span>(sim.data.full, T.x)</code></pre></div>
-<pre><code>## List of 7
-##  $ Y0   :'data.frame':   15000 obs. of  3 variables:
-##   ..$ m1: num [1:15000] -0.334 -0.89 -1.653 -0.88 -2.655 ...
-##   ..$ m2: num [1:15000] 0.318 -0.424 -1.286 -0.755 0.316 ...
-##   ..$ m3: num [1:15000] -0.5314 0.0173 -1.5291 -0.1862 -1.6029 ...
-##  $ Y1   :'data.frame':   15000 obs. of  3 variables:
-##   ..$ m1: num [1:15000] 0.0607 -0.4957 -1.2589 -0.4857 -2.2603 ...
-##   ..$ m2: num [1:15000] 0.668 -0.074 -0.936 -0.405 0.666 ...
-##   ..$ m3: num [1:15000] -0.149 0.4 -1.147 0.196 -1.22 ...
-##  $ V.k  : num [1:15000, 1:3] -1.96 -1.96 -1.96 -1.96 -1.96 ...
-##  $ X.jk : num [1:15000, 1:3] 1.29 1.29 1.29 1.29 1.29 ...
-##  $ C.ijk: num [1:15000, 1:3] 1.1249 -1.7509 -0.9587 0.1567 -0.0352 ...
-##  $ ID   :'data.frame':   15000 obs. of  2 variables:
-##   ..$ S.id: int [1:15000] 1 1 1 1 1 1 1 1 1 1 ...
-##   ..$ D.id: int [1:15000] 1 1 1 1 1 1 1 1 1 1 ...
-##  $ Yobs :'data.frame':   15000 obs. of  3 variables:
-##   ..$ m1: num [1:15000] 0.0607 -0.4957 -1.2589 -0.4857 -2.2603 ...
-##   ..$ m2: num [1:15000] 0.668 -0.074 -0.936 -0.405 0.666 ...
-##   ..$ m3: num [1:15000] -0.149 0.4 -1.147 0.196 -1.22 ...</code></pre>
+sim.data<span class="op">$</span>Yobs &lt;-<span class="st"> </span><span class="kw">gen_Yobs</span>(sim.data, <span class="dt">T.x =</span> sim.data<span class="op">$</span>T.x)</code></pre></div>
 </div>
 
 

@@ -57,14 +57,12 @@ K <- pump_sample(
 )
 
 ## ---- echo = FALSE------------------------------------------------------------
-# print(K)
 knitr::kable(K)
 
 ## -----------------------------------------------------------------------------
 p <- update(K, type = "power", tnum = 100000)
 
 ## ---- echo = FALSE------------------------------------------------------------
-# print(p)
 knitr::kable(p)
 
 ## ---- echo = FALSE------------------------------------------------------------
@@ -90,18 +88,17 @@ J1 <- pump_sample(
 )
 
 ## ---- include=FALSE-----------------------------------------------------------
-sp = search_path(J1)
+sp <- search_path(J1)
 sp$dx[nrow(sp)] * 4
 
 ## ---- echo = FALSE------------------------------------------------------------
-# print(J1)
 knitr::kable(J1)
 
 ## ---- echo = TRUE-------------------------------------------------------------
 search_path(J1)
 
 ## ---- fig.width=7, fig.align="center"-----------------------------------------
-plot_power_search(J1)
+plot(J1, type = "search")
 
 ## ---- echo = FALSE------------------------------------------------------------
 set.seed( 333434447 )
@@ -110,7 +107,7 @@ set.seed( 333434447 )
 power_curve(J1)
 
 ## ---- fig.width=5, fig.align="center"-----------------------------------------
-plot_power_curve(J1)
+plot(J1)
 
 ## ---- echo = FALSE------------------------------------------------------------
 set.seed(2344)
@@ -156,7 +153,7 @@ nbar1 <- pump_sample(
 knitr::kable(nbar1)
 
 ## ---- fig.width=5, fig.align="center"-----------------------------------------
-plot_power_curve(nbar1)
+plot( nbar1 )
 
 ## ---- echo = FALSE------------------------------------------------------------
 set.seed(2344)
@@ -227,5 +224,5 @@ nbar3 <- pump_sample(
 knitr::kable(nbar3)
 
 ## ---- fig.width=7, fig.align="center"-----------------------------------------
-plot_power_search(nbar3)
+plot(nbar3, type = "search")
 

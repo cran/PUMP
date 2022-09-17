@@ -4,6 +4,7 @@
 \alias{pumpresult}
 \alias{params}
 \alias{d_m}
+\alias{design}
 \alias{search_path}
 \alias{pump_type}
 \alias{is.pumpresult}
@@ -18,6 +19,8 @@
 params(x, ...)
 
 d_m(x, ...)
+
+design(x, ...)
 
 search_path(x, ...)
 
@@ -64,6 +67,8 @@ converting column names is optional.}
 params: List of design parameters used.
 
 d_m: Context (d_m) used (as string).
+
+design (the randomization and levels) as string.
 
 search_path: Dataframe describing search path, 
 if it was saved in the pumpresult object.
@@ -127,7 +132,6 @@ J <- pump_sample(d_m = "d2.1_m2fc",
   Tbar = 0.5, alpha = 0.05, numCovar.1 = 1,
   R2.1 = 0.1, ICC.2 = 0.05, rho = 0.2, tnum = 1000)
   
-print_search(J)   
 search_path(J)
 power_curve(J)   
 }

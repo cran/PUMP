@@ -67,26 +67,28 @@ gen_RE_cov_matrix <- function( Sigma.w, Sigma.z, Sigma.wz ) {
 
 
 
-#' @title Generate simulated multi-level data (simulation function)
-#' 
-#' @description Generates simulated data for multi-level
-#' RCTs for pump-suppored designs and models for
-#' both unobserved and observed potential outcomes.
-#' 
-#' Takes in a list of necessary data-generating parameters.
-#' 
-#' This function is beyond the main scope of calculating power,
-#' and is instead used for simulating data.
-#' For more info on use, see the simulation vignette.
-#' 
+#' @title Generate base simulated multi-level data (simulation
+#'   function)
+#'
+#' @description Generates simulated data for multi-level RCTs for
+#'   pump-supported designs and models for both unobserved potential
+#'   outcomes. This function does not generate treatment assignments
+#'   or observed outcomes.
+#'
+#'   Takes in a list of necessary data-generating parameters.
+#'
+#'   This function is beyond the main scope of calculating power, and
+#'   is instead used for simulating data. For more info on use, see
+#'   the simulation vignette.
+#'
 #'
 #' @param dgp.params.list list of data generating parameters.
 #'
 #' @return list; potential outcomes given control y0, treatment y1,
-#'         covariates V.k, X.jk, C.ijk.
+#'   covariates V.k, X.jk, C.ijk.
 #'
 #' @export
-gen_full_data <- function(dgp.params.list) {
+gen_base_sim_data <- function(dgp.params.list) {
     
     # ------------------------------#
     # setup: convert model params.list to variables
@@ -113,8 +115,10 @@ gen_full_data <- function(dgp.params.list) {
     # generates vector of school and district assignments, assuming equal sizes of everything
     if ( is.null( S.id ) ) {
         assignments <- gen_assignments( J, K, nbar )
-        S.id        <- assignments[['S.id']]  # N-length vector of indiv school assignments i.e. (1,1,2,2,3,3)
-        D.id        <- assignments[['D.id']]  # N-length vector of indiv district assignments i.e. (1,1,1,2,2,2)
+        # N-length vector of indiv school assignments i.e. (1,1,2,2,3,3)
+        S.id        <- assignments[['S.id']] 
+        # N-length vector of indiv district assignments i.e. (1,1,1,2,2,2)
+        D.id        <- assignments[['D.id']]  
     }
     N <- length( S.id )
     
@@ -295,20 +299,112 @@ gen_full_data <- function(dgp.params.list) {
     }
 }
 
-
-
-#' @title Converts model params into DGP params (simulation function)
+#' @title Generate simulated multi-level data (simulation function)
 #' 
-#' @description Converts user-provided parameters such as ICC
-#' and omega into data-generating parameters that can 
-#' produce simulated data,
-#' such as variance values and covariate coefficients.
+#' @description Generates simulated data for multi-level
+#' RCTs for pump-suppored designs and models for
+#' both unobserved and observed potential outcomes.
+#' 
+#' Takes in two options:
+#' - a pumpresult object
+#' OR
+#' - a list of necessary data-generating parameters
+#' - the context (d_m)
+#' - Tbar (proportion assigned to treatment)
 #' 
 #' This function is beyond the main scope of calculating power,
 #' and is instead used for simulating data.
 #' For more info on use, see the simulation vignette.
 #' 
-#' @param model.params.list list; model parameters.
+#' @param pump.object A pumpresult object.
+#' @param d_m string; a single context, which is a design and model code. 
+#' See pump_info() for list of choices.
+#' @param model.params.list list; model parameters such as ICC,
+#' R2, etc. See simulation vignette for details.
+#' @param Tbar scalar; the proportion of samples 
+#' that are assigned to the treatment.
+#'
+#' @return list; potential outcomes, covariates,
+#' observed outcomes, and treatment assignment.
+#' 
+#'
+#' @export
+#' @examples
+#'
+#' pp <- pump_power( d_m = "d3.2_m3ff2rc",
+#'                   MTP = "BF",
+#'                   MDES = rep( 0.10, 3 ),
+#'                   M = 3,
+#'                   J = 3, # number of schools/block
+#'                   K = 21, # number RA blocks
+#'                   nbar = 258,
+#'                   Tbar = 0.50, # prop Tx
+#'                   alpha = 0.05, # significance level
+#'                   numCovar.1 = 5, numCovar.2 = 3,
+#'                   R2.1 = 0.1, R2.2 = 0.7,
+#'                   ICC.2 = 0.05, ICC.3 = 0.4,
+#'                   rho = 0.4,
+#'                   tnum = 200
+#' )
+#' sim.data <- gen_sim_data(pump.object = pp)
+#'
+gen_sim_data <- function(
+    d_m = NULL, model.params.list = NULL, Tbar = 0.5,
+    pump.object = NULL)
+{
+    
+    # If first thing is a pump.object, swap
+    if ( !is.null(d_m) && (is.pumpresult(d_m) || is.pumpgridresult(d_m)) ) {
+        pump.object <- d_m
+        d_m<- NULL
+    }
+    
+    if(is.null(pump.object))
+    {
+      if(is.null(d_m) | is.null(model.params.list))
+      {
+          stop("You must provide either a pump object
+                or both a design string (d_m) and list of model params.")
+      }
+    } else {
+      if(!is.null(d_m) | !is.null(model.params.list))
+      {
+          stop("You must provide either a pump object or
+                a design string (d_m) and list of model params pair (not both).")
+      }
+      model.params.list <- params(pump.object)
+      d_m <- d_m(pump.object)
+      Tbar <- model.params.list$Tbar
+      model.params.list$rho.default <- model.params.list$rho
+    }
+    
+    dgp.params.list <- convert_params(model.params.list)
+    sim.data <- gen_base_sim_data(dgp.params.list)
+    sim.data$T.x <- gen_T.x(
+        d_m = d_m,
+        S.id = sim.data$ID$S.id,
+        D.id = sim.data$ID$D.id,
+        Tbar = Tbar
+    )
+    sim.data$Yobs <- gen_Yobs(sim.data, T.x = sim.data$T.x)
+    
+    return(sim.data)
+}
+
+
+
+#' @title Converts model params into DGP params (simulation function)
+#'
+#' @description Converts user-provided parameters such as ICC and
+#'   omega into data-generating parameters that can produce simulated
+#'   data, such as variance values and covariate coefficients.
+#'
+#'   This function is beyond the main scope of calculating power, and
+#'   is instead used for simulating data. For more info on use, see
+#'   the simulation vignette.
+#'
+#' @param model.params.list list; model parameters such as ICC, R2,
+#'   etc.
 #'
 #' @return list; data-generating parameters.
 #'
@@ -330,29 +426,61 @@ convert_params <- function(model.params.list) {
     has.level.three <- TRUE
     if ( is.null( ICC.3 ) ) {
         has.level.three <- FALSE
-        ICC.3 <- rep(0, M)
-        R2.3 <- rep(0, M)
-        omega.3 <- rep(0, M)
-        K <- 1
+        ICC.3 <- model.params.list$ICC.3 <- rep(0, M)
+        R2.3 <- model.params.list$R2.3 <- rep(0, M)
+        omega.3 <- model.params.list$omega.3 <- rep(0, M)
+        K <- model.params.list$K <- 1
     }
     
-    # if rho.default is provided, fill out all the rhos
-    if(!is.null(rho.default))
+    if(is.null(rho.default) & any(c(
+       is.null(model.params.list$rho.V), 
+       is.null(model.params.list$rho.w0),
+       is.null(model.params.list$rho.w1),
+       is.null(model.params.list$rho.X), 
+       is.null(model.params.list$rho.u0),
+       is.null(model.params.list$rho.u1),
+       is.null(model.params.list$rho.C), 
+       is.null(model.params.list$rho.r))))
     {
-        message('Using default rho for all rho matrices, 
-                overriding any user-input rho matrices.')
-        default.rho.matrix <- gen_corr_matrix(M = M, rho.scalar = rho.default)
-
-        model.params.list$rho.V  <- default.rho.matrix
-        model.params.list$rho.w0 <- default.rho.matrix
-        model.params.list$rho.w1 <- default.rho.matrix
-        
-        model.params.list$rho.X  <- default.rho.matrix
-        model.params.list$rho.u0 <- default.rho.matrix
-        model.params.list$rho.u1 <- default.rho.matrix
-        
-        model.params.list$rho.C  <- default.rho.matrix
-        model.params.list$rho.r  <- default.rho.matrix
+        stop('Please provide either a rho.default or
+             ALL necessary correlation matrices.')
+    }
+    
+    default.rho.matrix <- gen_corr_matrix(M = M, rho.scalar = rho.default)
+    
+    if(is.null(model.params.list$rho.V))
+    {
+        model.params.list$rho.V  <- default.rho.matrix 
+    }
+    if(is.null(model.params.list$rho.w0))
+    {
+        model.params.list$rho.w0  <- default.rho.matrix 
+    }
+    if(is.null(model.params.list$rho.w1))
+    {
+        model.params.list$rho.w1 <- default.rho.matrix 
+    }
+    
+    if(is.null(model.params.list$rho.X))
+    {
+        model.params.list$rho.X  <- default.rho.matrix 
+    }
+    if(is.null(model.params.list$rho.u0))
+    {
+           model.params.list$rho.u0  <- default.rho.matrix 
+    }
+    if(is.null(model.params.list$rho.u1))
+    {
+        model.params.list$rho.u1 <- default.rho.matrix 
+    }
+    
+    if(is.null(model.params.list$rho.C))
+    {
+        model.params.list$rho.C  <- default.rho.matrix 
+    }
+    if(is.null(model.params.list$rho.r))
+    {
+           model.params.list$rho.r  <- default.rho.matrix 
     }
     
     convert.scalar <- function(x, M)
@@ -461,27 +589,29 @@ convert_params <- function(model.params.list) {
     
 }
 
-#' @title Generates school and district assignments (simulation function)
-#' 
-#' @description Generates simple default schools and 
-#' districts IDs for individual students for the purpose of
-#' simulations. This assumes equal sized schools in 
-#' equal sized districts.
-#' 
-#' This function is beyond the main scope of calculating power,
-#' and is instead used for simulating data.
-#' For more info on use, see the simulation vignette.
+#' @title Generates school and district assignments (simulation
+#'   function)
+#'
+#' @description Generates simple default schools and districts IDs for
+#'   individual students for the purpose of simulations. This assumes
+#'   equal sized schools in equal sized districts.
+#'
+#'   This function is beyond the main scope of calculating power, and
+#'   is instead used for simulating data. For more info on use, see
+#'   the simulation vignette.
 #'
 #' @param K scalar; number of districts.
 #' @param J scalar; number of schools per district.
 #' @param nbar scalar; number of individuals per school.
 #'
-#' @return list; school and district 
-#' assignments (S.id, D.id) for each individual.
-#' 
+#' @return list; school and district assignments (S.id, D.id) for each
+#'   individual.
+#'
 #' @export
 gen_assignments <- function(J, K, nbar){
     
+    J <- ifelse(is.null(J), 1, J)
+    K <- ifelse(is.null(K), 1, K)
     N <- nbar * J * K
     
     # vector of assignments to schools
@@ -511,6 +641,9 @@ gen_assignments <- function(J, K, nbar){
     return(list(S.id = S.id, D.id = D.id))
 }
 
+
+
+
 #' @title Generate treatment assignment vector (simulation function)
 #' 
 #' @description Given a RCT design and supporting information,
@@ -523,34 +656,29 @@ gen_assignments <- function(J, K, nbar){
 #' @param d_m string; design and model.
 #' @param S.id vector; school assignments.
 #' @param D.id vector; district assignments.
-#' @param nbar scalar; number of level 1 units.
 #' @param Tbar scalar; probability of treatment assignment.
 #'
 #' @return vector; treatment assignments for each unit.
 #' 
 #' @export
-gen_T.x <- function(d_m, S.id, D.id, nbar, Tbar)
+gen_T.x <- function(d_m, S.id, D.id, Tbar)
 {
-    if(startsWith(d_m, 'd1.1'))
-    {
-        T.x <- randomizr::simple_ra(N = nbar, prob = Tbar)
-    } else if(startsWith(d_m, 'd2.1') | startsWith(d_m, 'd3.1'))
-    {
+    od <- d_m
+    d_m <- strsplit(d_m, "_")
+    d_m <- d_m[[1]][[1]]
+    
+    if(d_m == "d1.1") {
+        T.x <- randomizr::simple_ra(N = length(S.id), prob = Tbar)
+    } else if( d_m == "d2.1" || d_m == "d3.1" ) {
         T.x <- randomizr::block_ra( S.id, prob = Tbar )
-    } else if(startsWith(d_m, 'd2.2'))
-    { 
+    } else if( d_m == "d2.2" ) { 
         T.x <- randomizr::cluster_ra( S.id, prob = Tbar )
-    } else if(startsWith(d_m, 'd3.3'))
-    {
+    } else if( d_m == "d3.3" ) {
         T.x <- randomizr::cluster_ra( D.id, prob = Tbar )
-    } else if(startsWith(d_m, 'd3.2'))
-    {
-        T.x <- randomizr::block_and_cluster_ra( 
-            blocks = D.id, clusters = S.id, prob = Tbar 
-        )
-    } else
-    {
-        stop(print(paste('d_m', d_m, 'not implemented yet')))
+    } else if( d_m == "d3.2" ) {
+        T.x <- randomizr::block_and_cluster_ra( blocks = D.id, clusters = S.id, prob = Tbar )
+    } else {
+        stop(print(paste('design', d_m, 'not implemented yet')))
     }
     return(T.x)
 }
@@ -558,15 +686,15 @@ gen_T.x <- function(d_m, S.id, D.id, nbar, Tbar)
 
 
 #' @title Generate observed outcomes (simulation function)
-#' 
-#' @description Takes in a full dataset of both observed
-#' and latent potential outcomes and the treatment assignment vector,
-#' and returns only the observed outcomes.
-#' 
-#' This function is beyond the main scope of calculating power,
-#' and is instead used for simulating data.
-#' For more info on use, see the simulation vignette.
-#' 
+#'
+#' @description Takes in a full dataset of both observed and latent
+#'   potential outcomes and the treatment assignment vector, and
+#'   returns only the observed outcomes.
+#'
+#'   This function is beyond the main scope of calculating power, and
+#'   is instead used for simulating data. For more info on use, see
+#'   the simulation vignette.
+#'
 #' @param full.data data.frame; full dataset of potential outcomes.
 #' @param T.x vector; binary assignment to treat/control.
 #'
@@ -578,4 +706,48 @@ gen_Yobs <- function(full.data, T.x) {
     Yobs[T.x == 1,] <- full.data$Y1[T.x == 1,]
     return(Yobs)
 }
+
+
+#' Convert multi-outcome data structure to list for each outcome.
+#'
+#' Given the simulated multi-outcome structure, make a list of
+#' complete (tidy) rectangular datasets, one for each outcome.
+#'
+#' @param samp.obs a single iteration of observed data
+#' @param T.x vector of treatment assignments
+#' @return List of dataframes.
+#' @keywords internal
+makelist_samp <-function(samp.obs, T.x) {
+    
+    mdat.rn <- rep( NULL, ncol(samp.obs$Yobs) )
+    for(m in 1:ncol(samp.obs$Yobs))
+    {
+        # level 3
+        if(!is.null(samp.obs[['V.k']]))
+        {
+            mdat.rn[[m]] <- data.frame(
+                Yobs        = samp.obs[['Yobs']][,m],
+                V.k         = samp.obs[['V.k']][,m],
+                X.jk        = samp.obs[['X.jk']][,m],
+                C.ijk       = samp.obs[['C.ijk']][,m],
+                T.x         = T.x,
+                S.id        = as.factor(samp.obs$ID$S.id),
+                D.id        = as.factor(samp.obs$ID$D.id)
+            )
+        } else
+            # level 2
+        {
+            mdat.rn[[m]] <- data.frame(
+                Yobs        = samp.obs[['Yobs']][,m],
+                X.jk        = samp.obs[['X.jk']][,m],
+                C.ijk       = samp.obs[['C.ijk']][,m],
+                T.x         = T.x,
+                S.id        = as.factor(samp.obs$ID$S.id)
+            )
+        }
+    }
+    return(mdat.rn)
+}
+
+
 

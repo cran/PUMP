@@ -179,7 +179,7 @@ pump_info <- function(
 
 
 
-#' @title Return characteristics of a given context (d_m code)
+#' @title Return characteristics of a given context/d_m code (support function)
 #'
 #' @description Returns number of levels and model at each level.
 #' See pump_info()$Context to get a list of supported d_ms.
@@ -227,7 +227,8 @@ parse_d_m <- function( d_m ) {
           model3 = l3,
           model3.p = l3.p,
           FE.2 = FE.2,
-          FE.3 = FE.3
+          FE.3 = FE.3,
+          design = paste0( "d", levels, ".", nums[[2]] )
     ) )
 }
 
@@ -585,17 +586,20 @@ calc_K <- function(d_m, MT, MDES, J, nbar, Tbar,
 
 #### Parameter and call validation code ####
 
-make_MDES_vector <- function( MDES, M, numZero = NULL, verbose = TRUE ) {
+make_MDES_vector <- function( MDES, M, 
+                              numZero = NULL,
+                              verbose = TRUE ) {
+    
     if( !is.null(numZero) ) {
-        if( ( length(MDES) > 1 ) && ( numZero + length(MDES) != M ) )
-        {
-            stop('Please provide an MDES vector + numZero that add up to M.\n
-             Example: MDES = c(0.1, 0.1), numZero = 3, M = 5.\n
-             Assumed MDES vector = c(0.1, 0.1, 0, 0, 0)')
-        }
         if( numZero >= M )
         {
-            stop('numZero cannot be greater than or equal to M' )
+            stop('numZero (or propZero*M) cannot be greater than or equal to M' )
+        }
+        if( ( length(MDES) > 1 ) && ( numZero + length(MDES) != M ) )
+        {
+            stop('Please provide an MDES vector + numZero (or propZero) that identify exactly M outcomes.\n
+             Example: MDES = c(0.1, 0.1), numZero = 3 or propZero = 3/5 with M = 5\n
+             Assumed MDES vector = c(0.1, 0.1, 0, 0, 0)')
         }
         if ( length(MDES) == 1 ) {
             MDES <- c(rep( MDES, M - numZero), rep(0, numZero) )
@@ -613,9 +617,8 @@ make_MDES_vector <- function( MDES, M, numZero = NULL, verbose = TRUE ) {
         if ( length(MDES) == 1 ) {
             MDES <- rep( MDES, M )
         } else {
-            stop(paste('Please provide a vector of MDES 
-                       values of length 1 or M. Current vector:',
-                       MDES, 'M =', M))
+            stop(paste('Please provide a vector of MDES values of length 1 or M. Current vector: ',
+                       paste0( MDES, collapse = ", " ), 'M =', M))
         }
     }
 
@@ -755,17 +758,30 @@ validate_inputs <- function( d_m, params.list,
     # MDES
     #-------------------------------------------------------#
 
+    if ( !is.null(params.list$propZero) ) {
+        if (!is.null(params.list$numZero) ) {
+            stop( "Only one of numZero and propZero can be non-null" )
+        }
+        if ( params.list$propZero < 0 || params.list$propZero >= 1 ) {
+            stop( "propZero must be in [0,1) range" )
+        }        
+        params.list$numZero = round( params.list$M * params.list$propZero )
+        params.list$propZero = NULL
+    }
+    
     if ( mdes.call ) {
         if ( !is.null( params.list$MDES ) ) {
             stop( "You cannot provide MDES to pump_mdes()" )
         }
+        
         if ( !is.null( params.list$numZero ) &&
              params.list$numZero >= params.list$M ) {
-            stop( sprintf( "You cannot specify %s zeros with %s outcomes",
+            stop( sprintf( "You cannot specify %s zeros via numZero or propZero with only %s outcomes",
                            params.list$numZero, params.list$M ) )
         }
         
     } else {
+        
         params.list$MDES <- make_MDES_vector(
             params.list$MDES,
             params.list$M, params.list$numZero,
@@ -867,10 +883,9 @@ validate_inputs <- function( d_m, params.list,
     # Basic checks of data parameters
     #-------------------------------------------------------#
 
-    if( (!is.null( params.list$K ) && params.list$K <= 0) |
-        ( !is.null( params.list$J) && params.list$J <= 0) |
-        params.list$nbar <= 0)
-    {
+    if( ( !is.null( params.list$K ) && params.list$K <= 0) |
+        ( !is.null( params.list$J ) && params.list$J <= 0) |
+        ( !is.null( params.list$nbar ) && params.list$nbar <= 0) ) {
         stop('Provided values of J, K, and/or nbar need to be positive.')
     }
 
@@ -918,10 +933,18 @@ validate_inputs <- function( d_m, params.list,
         warning('ICC.2 + ICC.3 = 1, leaving no variation at level 1')
     }
 
-    # invalid rho
-    if(params.list$rho > 1 | params.list$rho < -1)
-    {
-      stop('Please provide rho as a correlation between -1 and 1')
+    if ( is.null( params.list$rho ) ) {
+        if ( params.list$M > 1 ) {
+            stop('Please provide rho as a correlation between -1 and 1')
+        } else {
+            params.list$rho = 0
+        }
+    } else {
+        # invalid rho
+        if(params.list$rho > 1 | params.list$rho < -1)
+        {
+          stop('Please provide rho as a correlation between -1 and 1')
+        }
     }
 
     #-------------------------------------------------------#
@@ -931,6 +954,7 @@ validate_inputs <- function( d_m, params.list,
     # one level models
     if( par.d_m$levels == 1 ) {
       if( (!is.null( params.list$J ) && params.list$J != 1 ) ||
+          (!is.null( params.list$K ) && params.list$K != 1 ) ||
           (!is.null( params.list$numCovar.2 ) && params.list$numCovar.2 > 0 ) ||
           (!is.null( params.list$R2.2 ) && any(params.list$R2.2 > 0 ) ) ||
           (!is.null( params.list$ICC.2 ) && any(params.list$ICC.2 > 0 ) ) ||
@@ -938,7 +962,7 @@ validate_inputs <- function( d_m, params.list,
 
         warning('The following parameters are not valid for
                  one-level designs, and will be ignored:\n
-                 J, numCovar.2, R2.2, ICC.2, omega.2')
+                 J, K, numCovar.2, R2.2, ICC.2, omega.2')
       params.list$J <- NULL
       params.list$R2.2 <- NULL
       params.list$ICC.2 <- NULL
@@ -1099,6 +1123,9 @@ validate_inputs <- function( d_m, params.list,
           stop('Please provide a rho matrix with values between -1 and 1.')
         }
     }
+    
+    params.list$propZero = NULL
+    
     return(params.list)
 
 }

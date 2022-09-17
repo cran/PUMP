@@ -299,7 +299,8 @@ test_that("sample search when one end is missing", {
                                           R2.1 = 0.1, R2.2 = 0.7, ICC.2 = 0.05,
                                           rho = 0.2, tnum = 1000 ) )
   nbar3
-  expect_true( is.na( nbar3$`Sample.size` ) )
+  expect_true( !is.na( nbar3$`Sample.size` ) )
+  expect_true( nbar3$`Sample.size` > 100000 )
 })
 
 
@@ -572,14 +573,15 @@ test_that( "different MDES values work", {
         rho = 0.4, tnum = default.tnum ) 
     pow
     
-    ss1 <- update( pow, type="sample",
+    ss1 <- update( pow, type = "sample",
                    typesample = "J",
                    power.definition = "D4indiv",
-                   target.power = pow$D4indiv[[2]])
+                   target.power = pow$D4indiv[[2]],
+                   max.steps = 30)
     ss1
-    expect_equal( ss1$Sample.size, 40, tol=0.05 )
+    expect_equal( ss1$Sample.size, 40, tol = 0.05 )
     
-    ss2 <- update( pow, type="sample",
+    ss2 <- update( pow, type = "sample",
                    typesample = "J",
                    power.definition = "D5indiv",
                    target.power = 0.80 )

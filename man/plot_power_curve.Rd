@@ -23,17 +23,17 @@ pump_mdes (or data frame from, e.g., power_curve()).}
 \item{plot.points}{logical; whether to plot individually 
 tested points on curve.}
 
-\item{all}{logical; if TRUE, merge in the search path 
-from the original search.}
+\item{all}{logical; if TRUE, merge in the search path from the
+original search.}
 
-\item{low}{scalar; low range for the plot x-axis.}
+\item{low}{scalar; low range for curve.}
 
-\item{high}{scalar; high range for the plot.}
+\item{high}{scalar; high range for the curve.}
 
-\item{grid.size}{scalar; number of points to calculate power.}
+\item{grid.size}{scalar; number of points to calculate power for.}
 
-\item{tnum}{scalar; number of iterations to calculate 
-power at each grid point.}
+\item{tnum}{scalar; number of iterations to calculate power at each
+grid point.}
 
 \item{breaks}{scalar; the desired number of tick marks on the axes.}
 
@@ -50,10 +50,4 @@ This will give a plot of power vs. MDES or sample size. It can
   power changes little as a function of MDES or sample size, and can also be
   useful to gauge where convergence went poorly.
 }
-\examples{
-mdes <- pump_mdes(d_m = "d2.1_m2fc", MTP = 'HO',
-  power.definition = 'D1indiv', target.power = 0.7,
-  J = 60, nbar = 50, M = 3, Tbar = 0.5, alpha = 0.05,
-  numCovar.1 = 1, R2.1 = 0.1, ICC.2 = 0.05, rho = 0.2)
-plot_power_curve(mdes)
-}
+\keyword{internal}
