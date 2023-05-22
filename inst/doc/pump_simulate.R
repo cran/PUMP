@@ -9,12 +9,31 @@ library( PUMP )
 set.seed( 524235326 )
 
 ## -----------------------------------------------------------------------------
+pp <- pump_power( "d3.1_m3rr2rr", MDES = 0.2, 
+                  M = 5, rho = 0.8,
+                  MTP = "BH",
+                  nbar = 30, J = 7, K = 5, Tbar = 0.5 )
+sim.data <- gen_sim_data( pp )
+
+## -----------------------------------------------------------------------------
+head( sim.data[[1]] )
+
+## ---- warning=FALSE-----------------------------------------------------------
+pp.one <- update( pp, M = 1 )
+sim3 <- gen_sim_data( pp.one )
+head( sim3 )
+
+## -----------------------------------------------------------------------------
+sim.data.v2 <- gen_sim_data( pp, return.as.dataframe = FALSE )
+names( sim.data.v2 )
+
+## -----------------------------------------------------------------------------
 model.params.list <- list(
   M = 3                             # number of outcomes
-  , J = 30                          # number of schools
-  , K = 10                          # number of districts
-                                      # (for two-level model, set K = 1)
-  , nbar = 50                       # number of individuals per school
+  , J = 7                           # number of schools
+  , K = 5                           # number of districts
+                                    # (for two-level model, set K = 1)
+  , nbar = 30                       # number of individuals per school
   , rho.default = 0.5               # default rho value (optional)
   ################################################## impact
   , MDES = 0.125                    # minimum detectable effect size      
@@ -43,10 +62,10 @@ model.params.list <- list(
 #  
 #  model.params.list <- list(
 #    M = 3                             # number of outcomes
-#    , J = 30                          # number of schools
-#    , K = 10                          # number of districts
-#                                        # (for two-level model, set K = 1)
-#    , nbar = 50                       # number of individuals per school
+#    , J = 7                           # number of schools
+#    , K = 5                           # number of districts
+#                                      # (for two-level model, set K = 1)
+#    , nbar = 30                       # number of individuals per school
 #    , S.id = NULL                     # N-length vector of school assignments
 #    , D.id = NULL                     # N-length vector of district assignments
 #    ################################################## grand mean outcome and impact
@@ -88,7 +107,9 @@ sim.data <- gen_sim_data(d_m = 'd3.3_m3rc2rc', model.params.list, Tbar = 0.5)
 dgp.params.list <- convert_params(model.params.list)
 
 ## -----------------------------------------------------------------------------
-sim.data <- gen_base_sim_data(dgp.params.list)
+sim.data <- gen_base_sim_data(dgp.params.list, 
+                              dgp.params = TRUE,
+                              return.as.dataframe = FALSE )
 
 ## -----------------------------------------------------------------------------
 d_m <- 'd3.3_m3rc2rc'
@@ -99,4 +120,7 @@ sim.data$T.x <- gen_T.x(
     Tbar = 0.5
 )
 sim.data$Yobs <- gen_Yobs(sim.data, T.x = sim.data$T.x)
+
+## -----------------------------------------------------------------------------
+sim.data <- PUMP:::makelist_samp( sim.data )
 

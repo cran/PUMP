@@ -72,7 +72,7 @@ model.params.list[['rho.X']] <- model.params.list[['rho.C']] <- default.rho.matr
 model.params.list[['rho.u0']] <- model.params.list[['rho.u1']] <- model.params.list[['rho.r']] <- default.rho.matrix
 
 dgp.params.list <- convert_params(model.params.list)
-samp.full <- gen_base_sim_data(dgp.params.list)
+samp.full <- gen_base_sim_data(model.params.list, return.as.dataframe = FALSE)
 
 exp.Y0.var <- exp.Y0.var.fun(dgp.params.list)
 test_that(
@@ -91,7 +91,7 @@ test_that('Outcomes are within 30% of expected correlation = 0',{
 
 model.params.list[['MDES']] <- rep(0.125, M)
 dgp.params.list <- convert_params(model.params.list)
-samp.full <- gen_base_sim_data(dgp.params.list)
+samp.full <- gen_base_sim_data(model.params.list, return.as.dataframe = FALSE)
 
 exp.Y0.var <- exp.Y0.var.fun(dgp.params.list)
 test_that(
@@ -110,7 +110,7 @@ test_that('Outcomes are within 30% of expected correlation = 0',{
 
 model.params.list[['ICC.2']] <- rep(0.5, M)
 dgp.params.list <- convert_params(model.params.list)
-samp.full <- gen_base_sim_data(dgp.params.list)
+samp.full <- gen_base_sim_data(model.params.list, return.as.dataframe = FALSE)
 
 exp.Y0.var <- exp.Y0.var.fun(dgp.params.list)
 test_that(
@@ -134,7 +134,7 @@ model.params.list[['rho.X']] <- model.params.list[['rho.C']] <- default.rho.matr
 model.params.list[['rho.u0']] <- model.params.list[['rho.u1']] <- model.params.list[['rho.r']] <- default.rho.matrix
 
 dgp.params.list <- convert_params(model.params.list)
-samp.full <- gen_base_sim_data(dgp.params.list)
+samp.full <- gen_base_sim_data(model.params.list, return.as.dataframe = FALSE)
 
 exp.Y0.var <- exp.Y0.var.fun(dgp.params.list)
 test_that(
@@ -157,7 +157,7 @@ test_that('Outcomes are within 30% of expected correlation = 0.5',{
 
 model.params.list <- model.params.default
 dgp.params.list <- convert_params(model.params.list)
-samp.full <- gen_base_sim_data(dgp.params.list)
+samp.full <- gen_base_sim_data(model.params.list, return.as.dataframe = FALSE)
 
 exp.Y0.var <- exp.Y0.var.fun(dgp.params.list)
 test_that(
@@ -222,7 +222,7 @@ test_that(
 J <- 20
 K <- 10
 nbar <- 50
-assignments <- gen_assignments( J = J, K = K, nbar = nbar)
+assignments <- gen_cluster_ids( J = J, K = K, nbar = nbar)
 S.id        <- assignments[['S.id']]
 D.id        <- assignments[['D.id']]
 
@@ -246,7 +246,7 @@ Tbar <- 0.5
 
 # two level
 K <- 1
-assignments <- gen_assignments( J = J, K = K, nbar = nbar)
+assignments <- gen_cluster_ids( J = J, K = K, nbar = nbar)
 S.id        <- assignments[['S.id']]
 D.id        <- assignments[['D.id']]
 
@@ -275,7 +275,7 @@ test_that('Each cluster is assigned to either treatment or control',{
 
 # 3 level
 K <- 10
-assignments <- gen_assignments( J = J, K = K, nbar = nbar)
+assignments <- gen_cluster_ids( J = J, K = K, nbar = nbar)
 S.id        <- assignments[['S.id']]
 D.id        <- assignments[['D.id']]
 

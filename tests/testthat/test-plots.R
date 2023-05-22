@@ -21,17 +21,25 @@ test_that("Single Scenario plot works", {
                     tnum = 200
   )
   
+  pp
   ss.plot <- plot(pp)
+  ss.plot
   expect_true(!is.null(ss.plot))
 
   
-  ppL <- update( pp, long.table=TRUE )
+  ppL <- update( pp, long.table = TRUE )
   
   ss.plot <- plot(ppL)
   #ss.plot
   expect_true(!is.null(ss.plot))
   
+  ss.plot2 <- plot(pp, include_SE = FALSE)
+  ss.plot2
+  expect_true(!is.null(ss.plot2))
     
+  ss.plot3 <- plot(pp, include_SE = TRUE)
+  ss.plot3
+  expect_true(!is.null(ss.plot3))
 })
 
 
@@ -57,6 +65,7 @@ test_that("Grid plot works for power", {
   expect_true( attr( grid, "var_names") == "MDES" )
   
   grid.plot <- plot(grid, power.definition = 'min1' )
+  grid.plot
   expect_true(!is.null(grid.plot))
   
   grid.plot <- plot(grid, power.definition = 'D2indiv' )
@@ -157,7 +166,7 @@ test_that("Grid plot works for MDES", {
 
 test_that("Grid plot works for SS", {
     
-    grid <-expect_warning(pump_sample_grid(  d_m = "d3.2_m3ff2rc",
+    grid <- expect_warning(pump_sample_grid(  d_m = "d3.2_m3ff2rc",
                              MTP = c( "HO", "BH" ),
                              target.power = 0.8,
                              power.definition = 'complete',
@@ -226,19 +235,19 @@ test_that("Two variable plot works for SS", {
   
   
   grid <- pump_sample_grid(  d_m = "d2.2_m2rc",
-                                             MTP = c( "HO", "BH" ),
-                                             target.power = 0.8,
-                                             power.definition = c( "min1", 'complete' ),
-                                             typesample = 'J',
-                                             MDES = 0.1,
-                                             M = 3,
-                                             nbar = 258,
-                                             Tbar = 0.50, # prop Tx
-                                             alpha = 0.05, # significance level
-                                             numCovar.1 = 5, numCovar.2 = 3,
-                                             R2.1 = 0.1, R2.2 = 0.7,
-                                             ICC.2 = c( 0, 0.3 ),
-                                             rho = 0.4, tnum = 100, tol = 0.45 )
+                             MTP = c( "HO", "BH" ),
+                             target.power = 0.8,
+                             power.definition = c( "min1", 'complete' ),
+                             typesample = 'J',
+                             MDES = 0.1,
+                             M = 3,
+                             nbar = 258,
+                             Tbar = 0.50, # prop Tx
+                             alpha = 0.05, # significance level
+                             numCovar.1 = 5, numCovar.2 = 3,
+                             R2.1 = 0.1, R2.2 = 0.7,
+                             ICC.2 = c( 0, 0.3 ),
+                             rho = 0.4, tnum = 100, tol = 0.45 )
   # grid
   grid.plot <- plot(grid, power.definition = 'complete' )
   expect_true(!is.null(grid.plot))
@@ -269,7 +278,8 @@ test_that( "power_curve works", {
                         rho = 0,
                         final.tnum = 100 )
   
-  pc <- power_curve( up, low = 5, high = 1000, tnum = 200, grid.size=20, all=TRUE )
+  pc <- power_curve( up, low = 5, high = 1000, tnum = 200, 
+                     grid.size = 20, all = TRUE )
   expect_true( is.data.frame(pc) )
   expect_true( nrow(pc) > 20 )
   
@@ -332,5 +342,39 @@ test_that( "power curve plotting works", {
     plot_power_curve(mdes)
 })
 
+
+
+test_that( "color with grid plot works", {
+    
+ 
+    
+    # Do power analysis for 100 clusters of size 30 with 50% treated.
+    sit1 <- pump_mdes( d_m = "d2.2_m2rc",
+                       J = 100,
+                       nbar = 30,
+                       target.power = 0.80,
+                       Tbar = 0.50)
+    sit1
+    
+    
+    # Now run power analysis on all combinations of R2s and ICCs.  R2.1 is
+    # explanatory power for level 1 (student) outcomes (e.g., student
+    # pre-test).  R2.2 is explanatory power for the clusters (e.g., school
+    # average pretest).
+    expl <- update_grid( sit1, 
+                         ICC.2 = c( 0, 0.1, 0.2, 0.3 ),
+                         R2.1 = c( 0, 0.3, 0.5, 0.7, 0.9 ),
+                         R2.2 = c( 0, 0.3, 0.5, 0.7, 0.9 ),
+                         numCovar.1 = 5,
+                         numCovar.2 = 5 )
+    
+    expl
+    
+    plt <- plot( expl, color = "ICC.2" )
+    print( plt )
+    
+    expect_true( !is.null( plt ) )
+    
+})
 
 

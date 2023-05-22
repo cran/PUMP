@@ -14,63 +14,103 @@
 
 <title>Demo of simulating multi-level data</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -104,7 +144,187 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -122,107 +342,219 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="purpose-of-this-vignette" class="section level1">
 <h1>Purpose of this vignette</h1>
-<p>The main purpose of PUMP is to estimate power, MDES, and sample size requirements. As a separate task, PUMP provides extra functions that allow a user to generate data that simulates multi-level RCTs. These functions may not be relevant for most users, but we provide them for users who may find it useful. This vignette documents how to use the simulation functions.</p>
+<p>The main purpose of PUMP is to estimate power, MDES, and sample size
+requirements. As a separate task, PUMP provides extra functions that
+allow a user to generate data that simulates multi-level RCTs. These
+functions may not be relevant for most users, but we provide them for
+users who may find it useful. This vignette documents how to use these
+simulation functions.</p>
+<p>Overall, these simulation functions can be used in two ways: the user
+can supply a design just as they do with the power calculation tools,
+or, if they want more direct control, they can supply the data
+generating parameters directly, including some parameters not used by
+the power tools.</p>
+<p>The simulation function generates data from a multilevel model with
+random intercepts and impacts at each level. In our parlance, for
+two-level data we would use <code>m2rr</code>, and for three-level,
+<code>m3rr2rr</code>. For single-level data, no random effects are
+needed, and the treatment is assumed constant across all units.</p>
+</div>
+<div id="generating-data" class="section level1">
+<h1>Generating data</h1>
+<p>If you have a PUMP power result, you can generate data representing
+that design:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">pump_power</span>( <span class="st">&quot;d3.1_m3rr2rr&quot;</span>, <span class="at">MDES =</span> <span class="fl">0.2</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                  <span class="at">M =</span> <span class="dv">5</span>, <span class="at">rho =</span> <span class="fl">0.8</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                  <span class="at">MTP =</span> <span class="st">&quot;BH&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                  <span class="at">nbar =</span> <span class="dv">30</span>, <span class="at">J =</span> <span class="dv">7</span>, <span class="at">K =</span> <span class="dv">5</span>, <span class="at">Tbar =</span> <span class="fl">0.5</span> )</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>sim.data <span class="ot">&lt;-</span> <span class="fu">gen_sim_data</span>( pp )</span></code></pre></div>
+<p>The final output is a list of overlapping datasets, one for each
+outcome. In the above, for example, we would have three datasets. Here
+is the first:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">head</span>( sim.data[[<span class="dv">1</span>]] )</span></code></pre></div>
+<pre><code>##          V.k       X.jk      C.ijk S.id D.id         Yobs T.x
+## 1 -0.9819827 -0.2346151 -0.1619480    1    1  2.422388557   0
+## 2 -0.9819827 -0.2346151 -0.5228986    1    1 -0.397160508   1
+## 3 -0.9819827 -0.2346151  0.2764065    1    1  0.009688753   0
+## 4 -0.9819827 -0.2346151 -0.7808425    1    1  0.324631103   1
+## 5 -0.9819827 -0.2346151  1.9317788    1    1 -0.710576241   1
+## 6 -0.9819827 -0.2346151  2.1276960    1    1 -0.450927096   0</code></pre>
+<p>We have the observed outcome (<code>Yobs</code>), District and School
+ID (<code>D.id</code>, <code>S.id</code>), the level 1, level 2, and
+level 3 covariates (<code>C.ijk</code>, <code>X.jk</code>, and
+<code>V.k</code>), and treatment assigment (<code>T.x</code>). The
+treatment assignment vector is shared across the different outcome
+datasets.</p>
+<div id="generating-for-single-outcome" class="section level2">
+<h2>Generating for single outcome</h2>
+<p>If you want only one outcome, then you just get a dataframe back,
+rather than a list:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pp.one <span class="ot">&lt;-</span> <span class="fu">update</span>( pp, <span class="at">M =</span> <span class="dv">1</span> )</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>sim3 <span class="ot">&lt;-</span> <span class="fu">gen_sim_data</span>( pp.one )</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">head</span>( sim3 )</span></code></pre></div>
+<pre><code>##        V.k       X.jk        C.ijk S.id D.id       Yobs T.x
+## 1 1.861476 -0.7860397 -0.005134163    1    1  3.5210956   1
+## 2 1.861476 -0.7860397  0.311014697    1    1  0.1871731   0
+## 3 1.861476 -0.7860397  0.867599330    1    1 -0.1006710   1
+## 4 1.861476 -0.7860397 -0.970579528    1    1  0.6323839   1
+## 5 1.861476 -0.7860397 -0.162788223    1    1  0.2112607   0
+## 6 1.861476 -0.7860397 -0.653726045    1    1 -0.2492057   1</code></pre>
+</div>
+<div id="getting-components-separately" class="section level2">
+<h2>Getting components separately</h2>
+<p>Alternatively, <code>gen_sim_data()</code> can be called to provide
+data separated by part:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>sim.data.v2 <span class="ot">&lt;-</span> <span class="fu">gen_sim_data</span>( pp, <span class="at">return.as.dataframe =</span> <span class="cn">FALSE</span> )</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">names</span>( sim.data.v2 )</span></code></pre></div>
+<pre><code>## [1] &quot;Y0&quot;    &quot;Y1&quot;    &quot;V.k&quot;   &quot;X.jk&quot;  &quot;C.ijk&quot; &quot;ID&quot;    &quot;T.x&quot;   &quot;Yobs&quot;</code></pre>
+<p>Now the simulation output contains a list of the following
+vectors:</p>
+<ul>
+<li>potential outcomes <code>Y0</code> and <code>Y1</code>. These will
+be <span class="math inline">\(M\)</span> columns, one for each
+outcome.</li>
+<li>observed outcomes <code>Yobs</code>. Again <span class="math inline">\(M\)</span> columns.</li>
+<li>treatment assignment <code>T.x</code>. A numeric vector.</li>
+<li>covariates at each level: level 3 <code>V.k</code>, level 2
+<code>X.jk</code>, level 1 <code>C.ijk</code>. Each will be <span class="math inline">\(M\)</span> columns.</li>
+<li>ID, matrix of the assignments at each level, with level 2
+<code>S.id</code> and level 3 <code>D.id</code>. This is a two column
+data.frame</li>
+</ul>
+<p>Note that these simulated data contains both observed parameters and
+unobserved parameters (the unobserved potential outcome, depending on
+treatment assignment).</p>
+</div>
 </div>
 <div id="choosing-parameter-values" class="section level1">
 <h1>Choosing parameter values</h1>
-<p>The user first sets parameter values that will inform the data generating process. For full explanations of parameters, see the Technical Appendix.</p>
-<p>Note that some of these parameters directly influence things like power calculations, while others are &quot;nuisance&quot; parameters that are nevertheless needed to generate a full dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model.params.list &lt;-<span class="st"> </span><span class="kw">list</span>(
-  <span class="dt">M =</span> <span class="dv">3</span>                             <span class="co"># number of outcomes</span>
-  , <span class="dt">J =</span> <span class="dv">30</span>                          <span class="co"># number of schools</span>
-  , <span class="dt">K =</span> <span class="dv">10</span>                          <span class="co"># number of districts</span>
-                                      <span class="co"># (for two-level model, set K = 1)</span>
-  , <span class="dt">nbar =</span> <span class="dv">50</span>                       <span class="co"># number of individuals per school</span>
-  , <span class="dt">rho.default =</span> <span class="fl">0.5</span>               <span class="co"># default rho value (optional)</span>
-  ################################################## impact
-  , <span class="dt">MDES =</span> <span class="fl">0.125</span>                    <span class="co"># minimum detectable effect size      </span>
-  ################################################## level 3: districts
-  , <span class="dt">R2.3 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of district variation</span>
-                                      <span class="co"># explained by district covariates</span>
-  , <span class="dt">ICC.3 =</span> <span class="fl">0.2</span>                     <span class="co"># district intraclass correlation</span>
-  , <span class="dt">omega.3 =</span> <span class="fl">0.1</span>                   <span class="co"># ratio of district effect size variability</span>
-                                      <span class="co"># to random effects variability</span>
-  ################################################## level 2: schools
-  , <span class="dt">R2.2 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of school variation</span>
-                                    <span class="co"># explained by school covariates</span>
-  , <span class="dt">ICC.2 =</span> <span class="fl">0.2</span>                     <span class="co"># school intraclass correlation </span>
-  , <span class="dt">omega.2 =</span> <span class="fl">0.1</span>                   <span class="co"># ratio of school effect size variability</span>
-                                      <span class="co"># to random effects variability</span>
-  ################################################## level 1: individuals
-  , <span class="dt">R2.1 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of indiv variation explained</span>
-                                      <span class="co"># by indiv covariates</span>
-)</code></pre></div>
-<p>Above is the minimum set of parameters the user can provide. However, the user can also make additional choices that influence the simulated dat. A couple of notes about possible choices: - By default, the function will generate a vector of school and district assignments S.id and D.id that are evenly split, e.g. with an equal number of schools in each district and an equal number of students in each school. However, the user can also provide their own vector of assignments if they require a specific setup. - If the user specifies a <code>rho.default</code> value, all matrices will be populated using the assumed <span class="math inline">\(\rho\)</span>. The user can instead provide their own <span class="math inline">\(\rho\)</span> matrices.</p>
+<p>The user can also directly set parameter values that will inform the
+data generating process. Some of these parameters directly influence
+power, while others are “nuisance” parameters that are nevertheless
+needed to generate a full dataset. For full explanations of parameters,
+see the Technical Appendix.</p>
+<p>The minimum set of parameters the user can provide are as
+follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>model.params.list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">3</span>                             <span class="co"># number of outcomes</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  , <span class="at">J =</span> <span class="dv">7</span>                           <span class="co"># number of schools</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  , <span class="at">K =</span> <span class="dv">5</span>                           <span class="co"># number of districts</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                                    <span class="co"># (for two-level model, set K = 1)</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  , <span class="at">nbar =</span> <span class="dv">30</span>                       <span class="co"># number of individuals per school</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  , <span class="at">rho.default =</span> <span class="fl">0.5</span>               <span class="co"># default rho value (optional)</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="do">################################################## impact</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  , <span class="at">MDES =</span> <span class="fl">0.125</span>                    <span class="co"># minimum detectable effect size      </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="do">################################################## level 3: districts</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  , <span class="at">R2.3 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of district variation</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>                                      <span class="co"># explained by district covariates</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  , <span class="at">ICC.3 =</span> <span class="fl">0.2</span>                     <span class="co"># district intraclass correlation</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  , <span class="at">omega.3 =</span> <span class="fl">0.1</span>                   <span class="co"># ratio of district effect size variability</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>                                      <span class="co"># to random effects variability</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  <span class="do">################################################## level 2: schools</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  , <span class="at">R2.2 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of school variation</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>                                    <span class="co"># explained by school covariates</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>  , <span class="at">ICC.2 =</span> <span class="fl">0.2</span>                     <span class="co"># school intraclass correlation </span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>  , <span class="at">omega.2 =</span> <span class="fl">0.1</span>                   <span class="co"># ratio of school effect size variability</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>                                      <span class="co"># to random effects variability</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>  <span class="do">################################################## level 1: individuals</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>  , <span class="at">R2.1 =</span> <span class="fl">0.1</span>                      <span class="co"># percent of indiv variation explained</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>                                      <span class="co"># by indiv covariates</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>)</span></code></pre></div>
+<p>The user can also make additional choices that influence the
+simulated dat. A couple of notes about possible choices:</p>
+<ul>
+<li>By default, the function will generate a vector of school and
+district assignments S.id and D.id that are evenly split, e.g. with an
+equal number of schools in each district and an equal number of students
+in each school. However, the user can also provide their own vector of
+assignments if they require a specific setup.</li>
+<li>If the user specifies a <code>rho.default</code> value, all matrices
+will be populated using the assumed <span class="math inline">\(\rho\)</span>. The user can instead provide their
+own <span class="math inline">\(\rho\)</span> matrices.</li>
+</ul>
 <p>The full set of parameters the user can specify is below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">M &lt;-<span class="st"> </span><span class="dv">3</span>
-rho.default &lt;-<span class="st"> </span><span class="fl">0.5</span>
-default.rho.matrix &lt;-<span class="st"> </span><span class="kw">gen_corr_matrix</span>(<span class="dt">M =</span> M, <span class="dt">rho.scalar =</span> rho.default)
-default.kappa.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, M, M) 
-
-model.params.list &lt;-<span class="st"> </span><span class="kw">list</span>(
-  <span class="dt">M =</span> <span class="dv">3</span>                             <span class="co"># number of outcomes</span>
-  , <span class="dt">J =</span> <span class="dv">30</span>                          <span class="co"># number of schools</span>
-  , <span class="dt">K =</span> <span class="dv">10</span>                          <span class="co"># number of districts</span>
-                                      <span class="co"># (for two-level model, set K = 1)</span>
-  , <span class="dt">nbar =</span> <span class="dv">50</span>                       <span class="co"># number of individuals per school</span>
-  , <span class="dt">S.id =</span> <span class="ot">NULL</span>                     <span class="co"># N-length vector of school assignments</span>
-  , <span class="dt">D.id =</span> <span class="ot">NULL</span>                     <span class="co"># N-length vector of district assignments</span>
-  ################################################## grand mean outcome and impact
-  , <span class="dt">Xi0 =</span> <span class="dv">0</span>                         <span class="co"># scalar grand mean outcome under no treatment</span>
-  , <span class="dt">MDES =</span> <span class="kw">rep</span>(<span class="fl">0.125</span>, M)            <span class="co"># minimum detectable effect size      </span>
-  ################################################## level 3: districts
-  , <span class="dt">R2.3 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of district variation</span>
-                                      <span class="co"># explained by district covariates</span>
-  , <span class="dt">rho.V =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of district covariates</span>
-  , <span class="dt">ICC.3 =</span> <span class="kw">rep</span>(<span class="fl">0.2</span>, M)             <span class="co"># district intraclass correlation</span>
-  , <span class="dt">omega.3 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)           <span class="co"># ratio of district effect size variability</span>
-                                      <span class="co"># to random effects variability</span>
-  , <span class="dt">rho.w0 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for district random effects</span>
-  , <span class="dt">rho.w1 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for district impacts</span>
-  , <span class="dt">kappa.w =</span>  default.kappa.matrix <span class="co"># MxM matrix of correlations between district</span>
-                                      <span class="co"># random effects and impacts</span>
-  ################################################## level 2: schools
-  , <span class="dt">R2.2 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of school variation</span>
-                                      <span class="co"># explained by school covariates</span>
-  , <span class="dt">rho.X =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of school covariates</span>
-  , <span class="dt">ICC.2 =</span> <span class="kw">rep</span>(<span class="fl">0.2</span>, M)             <span class="co"># school intraclass correlation </span>
-  , <span class="dt">omega.2 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)           <span class="co"># ratio of school effect size variability</span>
-                                      <span class="co"># to random effects variability</span>
-  , <span class="dt">rho.u0 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for school random effects</span>
-  , <span class="dt">rho.u1 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for school impacts</span>
-  , <span class="dt">kappa.u =</span> default.kappa.matrix  <span class="co"># MxM matrix of correlations between school</span>
-                                      <span class="co"># random effects and impacts</span>
-  ################################################## level 1: individuals
-  , <span class="dt">R2.1 =</span> <span class="kw">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of indiv variation explained</span>
-                                      <span class="co"># by indiv covariates</span>
-  , <span class="dt">rho.C =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of individual covariates</span>
-  , <span class="dt">rho.r =</span> default.rho.matrix      <span class="co"># MxM matrix of correlations for individual residuals </span>
-)</code></pre></div>
-</div>
-<div id="simulate-data" class="section level1">
-<h1>Simulate data</h1>
-<p>Once the user has chosen the model parameters, the only remaining choice is <code>Tbar</code>, the proportion of units assigned to the treatment. This parameter is not considered a modeling parameter as it instead informs the randomization process.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim.data &lt;-<span class="st"> </span><span class="kw">gen_sim_data</span>(<span class="dt">d_m =</span> <span class="st">'d3.3_m3rc2rc'</span>, model.params.list, <span class="dt">Tbar =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p>The final output contains a list of the following vectors: - potential outcomes <code>Y0</code> and <code>Y1</code>. - observed outcomes <code>Yobs</code>. - treatment assignment <code>T.x</code>. - covariates at each level: level 3 <code>V.k</code>, level 2 <code>X.jk</code>, level 1 <code>C.ijk</code>. - ID assignments at each level: level 2 <code>S.id</code>, level 3 <code>D.id</code>.</p>
-<p>Note that the simulated data contains both observed parameters and unobserved parameters (the unobserved potential outcome, depending on treatment assignment).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>rho.default <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>default.rho.matrix <span class="ot">&lt;-</span> <span class="fu">gen_corr_matrix</span>(<span class="at">M =</span> M, <span class="at">rho.scalar =</span> rho.default)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>default.kappa.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, M, M) </span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>model.params.list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">M =</span> <span class="dv">3</span>                             <span class="co"># number of outcomes</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  , <span class="at">J =</span> <span class="dv">7</span>                           <span class="co"># number of schools</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  , <span class="at">K =</span> <span class="dv">5</span>                           <span class="co"># number of districts</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>                                    <span class="co"># (for two-level model, set K = 1)</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  , <span class="at">nbar =</span> <span class="dv">30</span>                       <span class="co"># number of individuals per school</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  , <span class="at">S.id =</span> <span class="cn">NULL</span>                     <span class="co"># N-length vector of school assignments</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>  , <span class="at">D.id =</span> <span class="cn">NULL</span>                     <span class="co"># N-length vector of district assignments</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>  <span class="do">################################################## grand mean outcome and impact</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>  , <span class="at">Xi0 =</span> <span class="dv">0</span>                         <span class="co"># scalar grand mean outcome under no treatment</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>  , <span class="at">MDES =</span> <span class="fu">rep</span>(<span class="fl">0.125</span>, M)            <span class="co"># minimum detectable effect size      </span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>  <span class="do">################################################## level 3: districts</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>  , <span class="at">R2.3 =</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of district variation</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>                                      <span class="co"># explained by district covariates</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>  , <span class="at">rho.V =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of district covariates</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>  , <span class="at">ICC.3 =</span> <span class="fu">rep</span>(<span class="fl">0.2</span>, M)             <span class="co"># district intraclass correlation</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>  , <span class="at">omega.3 =</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, M)           <span class="co"># ratio of district effect size variability</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>                                      <span class="co"># to random effects variability</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a>  , <span class="at">rho.w0 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for district random effects</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>  , <span class="at">rho.w1 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for district impacts</span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>  , <span class="at">kappa.w =</span>  default.kappa.matrix <span class="co"># MxM matrix of correlations between district</span></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>                                      <span class="co"># random effects and impacts</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>  <span class="do">################################################## level 2: schools</span></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>  , <span class="at">R2.2 =</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of school variation</span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a>                                      <span class="co"># explained by school covariates</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a>  , <span class="at">rho.X =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of school covariates</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a>  , <span class="at">ICC.2 =</span> <span class="fu">rep</span>(<span class="fl">0.2</span>, M)             <span class="co"># school intraclass correlation </span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a>  , <span class="at">omega.2 =</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, M)           <span class="co"># ratio of school effect size variability</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a>                                      <span class="co"># to random effects variability</span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a>  , <span class="at">rho.u0 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for school random effects</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a>  , <span class="at">rho.u1 =</span> default.rho.matrix     <span class="co"># MxM matrix of correlations for school impacts</span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a>  , <span class="at">kappa.u =</span> default.kappa.matrix  <span class="co"># MxM matrix of correlations between school</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a>                                      <span class="co"># random effects and impacts</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a>  <span class="do">################################################## level 1: individuals</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a>  , <span class="at">R2.1 =</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, M)              <span class="co"># percent of indiv variation explained</span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a>                                      <span class="co"># by indiv covariates</span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a>  , <span class="at">rho.C =</span> default.rho.matrix      <span class="co"># MxM correlation matrix of individual covariates</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a>  , <span class="at">rho.r =</span> default.rho.matrix      <span class="co"># MxM matrix of correlations for individual residuals </span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a>)</span></code></pre></div>
+<p>Once the user has chosen the model parameters, the only remaining
+choice is <code>Tbar</code>, the proportion of units assigned to the
+treatment. This parameter is not considered a modeling parameter as it
+instead informs the randomization process. It is not passed as part of
+the <code>model.params.list</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>sim.data <span class="ot">&lt;-</span> <span class="fu">gen_sim_data</span>(<span class="at">d_m =</span> <span class="st">&#39;d3.3_m3rc2rc&#39;</span>, model.params.list, <span class="at">Tbar =</span> <span class="fl">0.5</span>)</span></code></pre></div>
 </div>
 <div id="simulation-process" class="section level1">
 <h1>Simulation process</h1>
-<p>We briefly walk through the steps conducted by the <code>gen_sim_data</code> function in case the user wants to inspect intermediate steps of the process.</p>
-<p>First, the user-given parameters are then converted into parameters that inform the data-generating process (DGP). For example, a certain value of <span class="math inline">\(R^2\)</span> is converted in a coefficient value.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dgp.params.list &lt;-<span class="st"> </span><span class="kw">convert_params</span>(model.params.list)</code></pre></div>
-<p>Next, we generate a set of full simulation data, but without assuming any treatment assignment has occurred. The simulated data includes both unobserved and unobserved quantities, such as both potential outcomes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim.data &lt;-<span class="st"> </span><span class="kw">gen_base_sim_data</span>(dgp.params.list)</code></pre></div>
-<p>Finally, we generate the treatment assignment, and the observed outcomes <span class="math inline">\(Y^{obs}\)</span>. At this point, we need to specify the design and <code>Tbar</code> to generate the correct treatment assignment.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_m &lt;-<span class="st"> 'd3.3_m3rc2rc'</span>
-sim.data<span class="op">$</span>T.x &lt;-<span class="st"> </span><span class="kw">gen_T.x</span>(
-    <span class="dt">d_m =</span> d_m,
-    <span class="dt">S.id =</span> sim.data<span class="op">$</span>ID<span class="op">$</span>S.id,
-    <span class="dt">D.id =</span> sim.data<span class="op">$</span>ID<span class="op">$</span>D.id,
-    <span class="dt">Tbar =</span> <span class="fl">0.5</span>
-)
-sim.data<span class="op">$</span>Yobs &lt;-<span class="st"> </span><span class="kw">gen_Yobs</span>(sim.data, <span class="dt">T.x =</span> sim.data<span class="op">$</span>T.x)</code></pre></div>
+<p>We briefly walk through the steps conducted by the
+<code>gen_sim_data</code> function in case the user wants to inspect
+intermediate steps of the process.</p>
+<p>First, the user-given parameters are converted into parameters that
+inform the data-generating process (DGP). For example, a certain value
+of <span class="math inline">\(R^2\)</span> is converted in a
+coefficient value.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>dgp.params.list <span class="ot">&lt;-</span> <span class="fu">convert_params</span>(model.params.list)</span></code></pre></div>
+<p>Next, we generate a set of full simulation data, but without assuming
+any treatment assignment has occurred. The simulated data includes both
+unobserved and unobserved quantities, such as both potential
+outcomes.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>sim.data <span class="ot">&lt;-</span> <span class="fu">gen_base_sim_data</span>(dgp.params.list, </span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>                              <span class="at">dgp.params =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>                              <span class="at">return.as.dataframe =</span> <span class="cn">FALSE</span> )</span></code></pre></div>
+<p>Finally, we generate the treatment assignment, and the observed
+outcomes <span class="math inline">\(Y^{obs}\)</span>. At this point, we
+need to specify the design and <code>Tbar</code> to generate the correct
+treatment assignment.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>d_m <span class="ot">&lt;-</span> <span class="st">&#39;d3.3_m3rc2rc&#39;</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>sim.data<span class="sc">$</span>T.x <span class="ot">&lt;-</span> <span class="fu">gen_T.x</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>    <span class="at">d_m =</span> d_m,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>    <span class="at">S.id =</span> sim.data<span class="sc">$</span>ID<span class="sc">$</span>S.id,</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>    <span class="at">D.id =</span> sim.data<span class="sc">$</span>ID<span class="sc">$</span>D.id,</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>    <span class="at">Tbar =</span> <span class="fl">0.5</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>)</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>sim.data<span class="sc">$</span>Yobs <span class="ot">&lt;-</span> <span class="fu">gen_Yobs</span>(sim.data, <span class="at">T.x =</span> sim.data<span class="sc">$</span>T.x)</span></code></pre></div>
+<p>Finally, this can be converted to a series of dataframes:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>sim.data <span class="ot">&lt;-</span> PUMP<span class="sc">:::</span><span class="fu">makelist_samp</span>( sim.data )</span></code></pre></div>
 </div>
 
 

@@ -4,11 +4,11 @@
 #' @param M number of outcomes
 #' @return information about power type
 #' @keywords internal
-parse_power_definition <- function( power.definition, M ) {
+parse_power_definition <- function(power.definition, M) {
     powertype <- list( min = FALSE,
                        complete = FALSE,
                        indiv = FALSE )
-    if( !is.null(power.definition) )
+    if ( !is.null(power.definition) )
     {
         if ( stringr::str_detect( power.definition, "min" ) ) {
             powertype$min <- TRUE
@@ -23,8 +23,14 @@ parse_power_definition <- function( power.definition, M ) {
             powertype$indiv_k <- NULL
         } else if ( stringr::str_detect( power.definition, "indiv" ) ) {
             powertype$indiv <- TRUE
-            powertype$indiv_k <- readr::parse_number( power.definition )
-            stopifnot( is.numeric( powertype$indiv_k ) )
+            indiv_k <- readr::parse_number( power.definition )
+            if ( !is.na( indiv_k ) ) {
+                powertype$indiv_k = indiv_k
+            } else {
+                stop(glue::glue( "Invalid power definition 
+                                 {power.definition}.",
+                                 "Try, e.g., 'D1indiv'." ) )
+            }
         }
     }
     
@@ -33,19 +39,19 @@ parse_power_definition <- function( power.definition, M ) {
 
 
 
-get_power_names <- function( M, long=FALSE ) {
+get_power_names <- function(M, long = FALSE) {
     
     if ( M == 1 ) {
         nms <- c( "D1indiv" )
         lnms <- c( "individual outcome 1" )
     } else {
-        nms <- c( paste('D', 1:M, "indiv", sep="" ),
+        nms <- c( paste('D', 1:M, "indiv", sep = "" ),
                   'indiv.mean',
-                  paste('min', 1:(M-1), sep = ''),
+                  paste('min', 1:(M - 1), sep = ''),
                   'complete' )
         
         lnms <- c( paste("individual outcome", 1:M),
-                   'mean individual',  paste(1:(M-1),'minimum', sep = '-'),
+                   'mean individual',  paste(1:(M - 1),'minimum', sep = '-'),
                    'complete')
     }
     
@@ -78,22 +84,22 @@ get_power_names <- function( M, long=FALSE ) {
 # }
 
 # print out results cleanly
-scat <- function( str, ... ) {
+scat <- function(str, ...) {
     cat( sprintf( str, ... ) )
 }
 
 
-smessage <- function( str, ... ) {
+smessage <- function(str, ...) {
     message( sprintf( str, ... ) )
 }
 
 
-swarning <- function( str, ... ) {
+swarning <- function(str, ...) {
     warning( sprintf( str, ... ), call. = FALSE )
 }
 
 
-sstop <- function( str, ... ) {
+sstop <- function(str, ...) {
     stop( sprintf( str, ... ), call. = FALSE )
 }
 

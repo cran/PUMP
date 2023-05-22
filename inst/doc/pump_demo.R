@@ -5,6 +5,7 @@ library( PUMP )
 # compiles in a timely manner for CRAN.
 vignette_cache <- here::here("vignettes/output", "MDEScalc.RDS")
 recompile <- !file.exists(vignette_cache)
+# recompile <- TRUE
 
 knitr::opts_chunk$set(
   cache = FALSE,
@@ -52,7 +53,7 @@ kable(info$Parameters, format = 'latex', booktabs = TRUE ) %>%
 #    rho = 0.4 )                   # how correlated outcomes are
 
 ## ----MDEScalc-compile, echo = FALSE-------------------------------------------
-if(recompile)
+if (recompile)
 {
     m <- pump_mdes(
       d_m = "d3.2_m3fc2rc",         # choice of design and analysis strategy
@@ -70,10 +71,9 @@ if(recompile)
       R2.1 = 0.1, R2.2 = 0.7,       # explanatory power of covariates for each level
       ICC.2 = 0.05, ICC.3 = 0.4,    # intraclass correlation coefficients
       rho = 0.4 ) 
-    
-    saveRDS(m,  here::here("vignettes/output", "MDEScalc.RDS"))
-} else
-{
+    dir.create( here::here("vignettes/output") )
+    saveRDS(m, here::here("vignettes/output", "MDEScalc.RDS"))
+} else {
     m <- readRDS( here::here("vignettes/output", "MDEScalc.RDS") )
 }
 
@@ -85,7 +85,7 @@ knitr::kable( m, digits = 3 ) %>%
 #  m2 <- update( m, power.definition = "min1" )
 
 ## ----MDEScalcmin1-compile, echo = FALSE---------------------------------------
-if(recompile)
+if (recompile)
 {
     m2 <- update( m, power.definition = "min1" )
     saveRDS(m2, here::here("vignettes/output", "MDEScalcmin1.RDS"))
@@ -99,7 +99,7 @@ print( m2 )
 #  m3 <- update( m2, numZero = 2 )
 
 ## ----MDESwithNumZero-compile, echo = FALSE------------------------------------
-if(recompile)
+if (recompile)
 {
     m3 <- update( m2, numZero = 2 )
     saveRDS(m3, here::here("vignettes/output", "MDESwithNumZero.RDS"))
@@ -122,7 +122,7 @@ print( m3 )
 #  print( smp )
 
 ## ----samplesizecalc-compile, echo = FALSE-------------------------------------
-if(recompile)
+if (recompile)
 {
     smp <- pump_sample(
       d_m = "d3.2_m3fc2rc",
@@ -144,14 +144,14 @@ print( smp )
 #                     long.table = TRUE )
 
 ## ----samplesizeverify-compile, echo = FALSE-----------------------------------
-if(recompile)
+if (recompile)
 {
     p_check <- update( smp, type = "power", tnum = 20000,
                    long.table = TRUE )
     saveRDS(p_check, here::here("vignettes/output", "samplesizeverify.RDS"))
 } else
 {
-    p_check<- readRDS(here::here("vignettes/output", "samplesizeverify.RDS"))
+    p_check <- readRDS(here::here("vignettes/output", "samplesizeverify.RDS"))
 }
 knitr::kable( p_check, digits = 2 ) %>%
   kableExtra::kable_styling(position = "center")
@@ -163,7 +163,7 @@ plot( smp )
 #  pow <- update( p_check, tnum = 10000 )
 
 ## ----powbase-compile, echo = FALSE--------------------------------------------
-if(recompile)
+if (recompile)
 {
     pow <- update( p_check, tnum = 10000 )
     saveRDS(pow, here::here("vignettes/output", "powbase.RDS"))
@@ -178,7 +178,7 @@ if(recompile)
 #  plot( p2 )
 
 ## ----othercorrections-compile, echo = FALSE-----------------------------------
-if(recompile)
+if (recompile)
 {
     p2 <- update( pow,
       MTP = c( "BF", "HO", "WY-SD" ) )
@@ -194,7 +194,7 @@ plot( p2 )
 #  print( p_b )
 
 ## ----powICC-compile, echo = FALSE---------------------------------------------
-if(recompile)
+if (recompile)
 {
     p_b <- update( pow, ICC.2 = 0.20, ICC.3 = 0.25 )
     saveRDS(p_b, here::here("vignettes/output", "powICC.RDS"))
@@ -211,7 +211,7 @@ print( p_b )
 #  print( p_d )
 
 ## ----powR2-compile, echo = FALSE----------------------------------------------
-if(recompile)
+if (recompile)
 {
     p_d <- update( pow,
           	   R2.1 = c( 0.1, 0.3, 0.1, 0.2, 0.2 ),
@@ -234,7 +234,7 @@ summary( p_d )
 #  plot( grid, power.definition = "min1" )
 
 ## ----ICCgrid-compile, echo = FALSE--------------------------------------------
-if(recompile)
+if (recompile)
 {
     grid <- update_grid( pow,
         	ICC.2 = seq( 0, 0.3, 0.05 ),
@@ -254,7 +254,7 @@ plot( grid, power.definition = "min1" )
 #          	  B = 3000 )
 
 ## ----rhogrid-compile, echo = FALSE--------------------------------------------
-if(recompile)
+if (recompile)
 {
     gridRho <- update_grid( pow,
         	  MTP = c( "BF", "WY-SD" ),
@@ -277,7 +277,7 @@ plot( gridRho )
 #  plot( gridZero, nrow = 1 )
 
 ## ----numzerogrid-compile, echo = FALSE, fig.height = 2.5----------------------
-if(recompile)
+if (recompile)
 {
     gridZero <- update_grid( pow,
                              numZero = 0:4,

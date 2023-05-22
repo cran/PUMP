@@ -1,11 +1,11 @@
 Package: PUMP
 Type: Package
 Title: Power Under Multiplicity Project
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
-  person("Kristin", "Porter", email = "kristin.porter@mdrc.org", role = "aut"),
+  person("Kristin", "Porter", email = "kristin.porter@keporterconsulting.com", role = "aut"),
   person("Luke", "Miratrix", email = "luke_miratrix@gse.harvard.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0078-1906")),
-  person("Kristen", "Hunter", email = "kristenbhunter@gmail.com", role = "aut", comment = c(ORCID = "0000-0002-5678-4620")),
+  person("Kristen", "Hunter", email = "kristenbhunter@gmail.com", role = c("aut"), comment = c(ORCID = "0000-0002-5678-4620")),
   person("Zarni", "Htet", email = "zarni.htet@mdrc.org", role = "aut"),
   person("MDRC", role = "cph"),
   person("Institute of Education Sciences", role = "fnd")
@@ -18,12 +18,12 @@ Imports: dplyr, ggplot2, ggpubr, glue, future, lme4, magrittr, methods,
         mvtnorm, parallel, purrr, randomizr, readr, rlang, stats,
         stringr, tibble, tidyr, tidyselect
 Suggests: furrr, here, kableExtra, knitr, PowerUpR (>= 1.1.0), testthat
-License: MIT + file LICENSE
+License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2022-09-16 20:44:55 UTC; khunter
+Packaged: 2023-05-19 01:37:10 UTC; z3535929
 Author: Kristin Porter [aut],
   Luke Miratrix [aut, cre] (<https://orcid.org/0000-0002-0078-1906>),
   Kristen Hunter [aut] (<https://orcid.org/0000-0002-5678-4620>),
@@ -32,4 +32,4 @@ Author: Kristin Porter [aut],
   Institute of Education Sciences [fnd]
 Maintainer: Luke Miratrix <luke_miratrix@gse.harvard.edu>
 Repository: CRAN
-Date/Publication: 2022-09-17 20:06:16 UTC
+Date/Publication: 2023-05-22 13:00:02 UTC
