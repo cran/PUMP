@@ -2,7 +2,7 @@
 % Please edit documentation in R/designs_and_models.R
 \name{calc_J}
 \alias{calc_J}
-\title{This function calculates needed J to achieve a given power}
+\title{This function calculates needed J to achieve a given (unadjusted) power}
 \usage{
 calc_J(
   d_m,
@@ -23,8 +23,8 @@ calc_J(
 \arguments{
 \item{d_m}{a single RCT design (see list/naming convention)}
 
-\item{MT}{Number of approximate effect-size unit SEs 
-(adjusted for degrees of freedom issues) that the MDES 
+\item{MT}{Number of approximate effect-size unit SEs
+(adjusted for degrees of freedom issues) that the MDES
 needs to be to achieve desired power.  E.g., 2.8 for normal theory.}
 
 \item{MDES}{scalar; the MDES values for each outcome}
@@ -65,6 +65,6 @@ level 3 average impacts to variance of level 3 random intercepts.}
 J, the number of schools needed
 }
 \description{
-This function calculates needed J to achieve a given power
+This function calculates needed J to achieve a given (unadjusted) power
 }
 \keyword{internal}

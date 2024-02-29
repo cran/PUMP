@@ -25,12 +25,12 @@ library( kableExtra )
 library( knitr )
 set.seed( 0440044 )
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 info <- pump_info(comment = FALSE)
 kable( info$Context, format = 'latex', booktabs = TRUE ) %>%
   kable_styling(position = "center")
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 kable(info$Parameters, format = 'latex', booktabs = TRUE ) %>%
   kable_styling(position = "center")
 

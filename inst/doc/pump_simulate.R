@@ -18,7 +18,7 @@ sim.data <- gen_sim_data( pp )
 ## -----------------------------------------------------------------------------
 head( sim.data[[1]] )
 
-## ---- warning=FALSE-----------------------------------------------------------
+## ----warning=FALSE------------------------------------------------------------
 pp.one <- update( pp, M = 1 )
 sim3 <- gen_sim_data( pp.one )
 head( sim3 )
@@ -54,7 +54,7 @@ model.params.list <- list(
                                       # by indiv covariates
 )
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  M <- 3
 #  rho.default <- 0.5
 #  default.rho.matrix <- gen_corr_matrix(M = M, rho.scalar = rho.default)

@@ -36,7 +36,8 @@ pump_power(
   updateProgress = NULL,
   validate.inputs = TRUE,
   long.table = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  exact.where.possible = TRUE
 )
 }
 \arguments{
@@ -128,7 +129,8 @@ procedures.}
 processing of WY-SD.}
 
 \item{drop.zero.outcomes}{whether to report power results for
-outcomes with MDES = 0.}
+outcomes with MDES = 0.  If ALL MDES = 0, then the first outcome
+will not be dropped.}
 
 \item{updateProgress}{function to update progress bar (only used
 for PUMP shiny app).}
@@ -141,6 +143,9 @@ columns, and with more verbose names. See
 `transpose_power_table`.}
 
 \item{verbose}{TRUE/FALSE; Print out diagnostics of time, etc.}
+
+\item{exact.where.possible}{TRUE/FALSE; whether to do exact
+calculations when M=1, or use simulation.  Default is TRUE.}
 }
 \value{
 a pumpresult object containing power results.
@@ -172,8 +177,7 @@ pp <- pump_power(
 }
 \seealso{
 For more detailed information about this function and the
-  user choices, see the manuscript
-  \url{https://arxiv.org/abs/2112.15273}, which includes a detailed
-  Technical Appendix including information about the designs and
-  models and parameters.
+  user choices, see the manuscript <doi:10.18637/jss.v108.i06>,
+  which includes a detailed Technical Appendix including
+  information about the designs and models and parameters.
 }

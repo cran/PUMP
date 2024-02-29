@@ -61,6 +61,12 @@ update_grid <- function(x, ...)
     params["d_m"] <- d_m(x)
     for (p in names(params)) {
         params[[p]] <- unique( params[[p]] )
+        
+        # If find a "***" then this is an old grid and we want to 
+        # keep the values of the old grid
+        if ( !is.null( params[[p]] ) && params[[p]] == "***" ) {
+            params[[p]] = unique( x[[ p ]] )
+        }
     }
     pparam <- attr( x, "power.params.list" )
     params <- c( params, pparam )
@@ -429,6 +435,21 @@ is_long_table <- function(power_table)
 
 
 
+#' Remove SE and df columns from (wide) power table
+#'
+#' This is used to reduce the info on a power table before pivoting to
+#' long format.
+#'
+#' @keywords internal
+#' @param power_table Dataframe (power result object).
+#' @return Changed dataframe with all columns starting with SE or df
+#'   dropped.
+strip_SEs <- function( power_table ) {
+    power_table %>%
+        dplyr::select( -tidyselect::starts_with("SE"), -tidyselect::starts_with( "df" ) )
+}
+
+
 
 #' @title Convert power table from wide to long (result function)
 #'
@@ -465,6 +486,7 @@ transpose_power_table <- function(power_table, M = NULL)
         pnames <- get_power_names(M, long = TRUE)
         
         pp <- power_table %>% 
+            strip_SEs() %>%
             as.data.frame() %>%
             tidyr::pivot_longer( cols = tidyselect::any_of( names(pnames) ),
                                  names_to = "power",
@@ -614,13 +636,14 @@ print.pumpresult <- function(x, n = 10,
     if ( is.pumpresult(x) ) {
         
         if ( pump_type(x) == "power" ) {
-            SEh <- 0.5 + min( abs( 0.5 - x[,-1] ), na.rm = TRUE )
-            SEh <- calc_binomial_SE( SEh, tnum )
-            SEl <- 0.5 + max( abs( 0.5 - x[,-1] ), na.rm = TRUE )
-            SEl <- calc_binomial_SE( SEl, tnum )
             print( as.data.frame( x ), row.names = FALSE )
             
             if ( pars$M > 1 ) {
+                pows = strip_SEs(x)
+                SEh <- 0.5 + min( abs( 0.5 - pows[,-1] ), na.rm = TRUE )
+                SEh <- calc_binomial_SE( SEh, tnum )
+                SEl <- 0.5 + max( abs( 0.5 - pows[,-1] ), na.rm = TRUE )
+                SEl <- calc_binomial_SE( SEl, tnum )                
                 scat("\t%.3f <= SE <= %.3f\n", SEl, SEh )
             }
         } else if ( pump_type(x) == "sample" ) {

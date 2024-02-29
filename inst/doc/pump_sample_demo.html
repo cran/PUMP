@@ -374,83 +374,64 @@ try to recover those parameters.</p>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>    <span class="at">rho =</span> <span class="fl">0.5</span>, <span class="at">tnum =</span> <span class="dv">100000</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>)</span></code></pre></div>
 <table>
+<colgroup>
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="11%" />
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="4%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:right;">
-D1indiv
-</th>
-<th style="text-align:right;">
-D2indiv
-</th>
-<th style="text-align:right;">
-D3indiv
-</th>
-<th style="text-align:right;">
-indiv.mean
-</th>
-<th style="text-align:right;">
-min1
-</th>
-<th style="text-align:right;">
-min2
-</th>
-<th style="text-align:right;">
-complete
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="right">D1indiv</th>
+<th align="right">D2indiv</th>
+<th align="right">D3indiv</th>
+<th align="right">indiv.mean</th>
+<th align="right">min1</th>
+<th align="right">min2</th>
+<th align="right">complete</th>
+<th align="right">SE1</th>
+<th align="right">SE2</th>
+<th align="right">SE3</th>
+<th align="right">df1</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-None
-</td>
-<td style="text-align:right;">
-0.56213
-</td>
-<td style="text-align:right;">
-0.56524
-</td>
-<td style="text-align:right;">
-0.56428
-</td>
-<td style="text-align:right;">
-0.5638833
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
+<tr class="odd">
+<td align="left">None</td>
+<td align="right">0.56213</td>
+<td align="right">0.56524</td>
+<td align="right">0.56428</td>
+<td align="right">0.5638833</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.0542586</td>
+<td align="right">0.0542586</td>
+<td align="right">0.0542586</td>
+<td align="right">14</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:right;">
-0.41618
-</td>
-<td style="text-align:right;">
-0.41911
-</td>
-<td style="text-align:right;">
-0.41886
-</td>
-<td style="text-align:right;">
-0.4180500
-</td>
-<td style="text-align:right;">
-0.58365
-</td>
-<td style="text-align:right;">
-0.39567
-</td>
-<td style="text-align:right;">
-0.31228
-</td>
+<tr class="even">
+<td align="left">HO</td>
+<td align="right">0.41618</td>
+<td align="right">0.41911</td>
+<td align="right">0.41886</td>
+<td align="right">0.4180500</td>
+<td align="right">0.58365</td>
+<td align="right">0.39567</td>
+<td align="right">0.31228</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
 </tr>
 </tbody>
 </table>
@@ -475,35 +456,19 @@ power we just found.</p>
 <span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>)</span></code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:left;">
-Sample.type
-</th>
-<th style="text-align:right;">
-Sample.size
-</th>
-<th style="text-align:right;">
-D1indiv.power
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="left">Sample.type</th>
+<th align="right">Sample.size</th>
+<th align="right">D1indiv.power</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:left;">
-K
-</td>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:right;">
-0.4165
-</td>
+<tr class="odd">
+<td align="left">HO</td>
+<td align="left">K</td>
+<td align="right">16</td>
+<td align="right">0.4165</td>
 </tr>
 </tbody>
 </table>
@@ -539,83 +504,64 @@ would like to update. Here, we override the default <span class="math inline">\(
 increase precision.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">update</span>(K, <span class="at">type =</span> <span class="st">&quot;power&quot;</span>, <span class="at">tnum =</span> <span class="dv">100000</span>)</span></code></pre></div>
 <table>
+<colgroup>
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="11%" />
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="4%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:right;">
-D1indiv
-</th>
-<th style="text-align:right;">
-D2indiv
-</th>
-<th style="text-align:right;">
-D3indiv
-</th>
-<th style="text-align:right;">
-indiv.mean
-</th>
-<th style="text-align:right;">
-min1
-</th>
-<th style="text-align:right;">
-min2
-</th>
-<th style="text-align:right;">
-complete
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="right">D1indiv</th>
+<th align="right">D2indiv</th>
+<th align="right">D3indiv</th>
+<th align="right">indiv.mean</th>
+<th align="right">min1</th>
+<th align="right">min2</th>
+<th align="right">complete</th>
+<th align="right">SE1</th>
+<th align="right">SE2</th>
+<th align="right">SE3</th>
+<th align="right">df1</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-None
-</td>
-<td style="text-align:right;">
-0.59761
-</td>
-<td style="text-align:right;">
-0.59543
-</td>
-<td style="text-align:right;">
-0.59621
-</td>
-<td style="text-align:right;">
-0.5964167
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
+<tr class="odd">
+<td align="left">None</td>
+<td align="right">0.59761</td>
+<td align="right">0.59543</td>
+<td align="right">0.59621</td>
+<td align="right">0.5964167</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.0525357</td>
+<td align="right">0.0525357</td>
+<td align="right">0.0525357</td>
+<td align="right">15</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:right;">
-0.45930
-</td>
-<td style="text-align:right;">
-0.45677
-</td>
-<td style="text-align:right;">
-0.45735
-</td>
-<td style="text-align:right;">
-0.4578067
-</td>
-<td style="text-align:right;">
-0.62488
-</td>
-<td style="text-align:right;">
-0.43872
-</td>
-<td style="text-align:right;">
-0.34743
-</td>
+<tr class="even">
+<td align="left">HO</td>
+<td align="right">0.45930</td>
+<td align="right">0.45677</td>
+<td align="right">0.45735</td>
+<td align="right">0.4578067</td>
+<td align="right">0.62488</td>
+<td align="right">0.43872</td>
+<td align="right">0.34743</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
 </tr>
 </tbody>
 </table>
@@ -646,35 +592,19 @@ This idea will be explored in the next section.</p>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>)</span></code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:left;">
-Sample.type
-</th>
-<th style="text-align:right;">
-Sample.size
-</th>
-<th style="text-align:right;">
-D1indiv.power
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="left">Sample.type</th>
+<th align="right">Sample.size</th>
+<th align="right">D1indiv.power</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:left;">
-J
-</td>
-<td style="text-align:right;">
-19
-</td>
-<td style="text-align:right;">
-0.4185
-</td>
+<tr class="odd">
+<td align="left">HO</td>
+<td align="left">J</td>
+<td align="right">19</td>
+<td align="right">0.4185</td>
 </tr>
 </tbody>
 </table>
@@ -772,84 +702,65 @@ calculate power for a sample size of <code>nbar</code> = <span class="math inlin
 <span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>    <span class="at">ICC.2 =</span> <span class="fl">0.1</span>, <span class="at">ICC.3 =</span> <span class="fl">0.1</span>,</span>
 <span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>    <span class="at">omega.2 =</span> <span class="dv">0</span>, <span class="at">omega.3 =</span> <span class="dv">0</span>, <span class="at">rho =</span> <span class="fl">0.5</span></span>
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>)</span></code></pre></div>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="11%" />
+<col width="7%" />
+<col width="7%" />
+<col width="9%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="4%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:right;">
-D1indiv
-</th>
-<th style="text-align:right;">
-D2indiv
-</th>
-<th style="text-align:right;">
-D3indiv
-</th>
-<th style="text-align:right;">
-indiv.mean
-</th>
-<th style="text-align:right;">
-min1
-</th>
-<th style="text-align:right;">
-min2
-</th>
-<th style="text-align:right;">
-complete
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="right">D1indiv</th>
+<th align="right">D2indiv</th>
+<th align="right">D3indiv</th>
+<th align="right">indiv.mean</th>
+<th align="right">min1</th>
+<th align="right">min2</th>
+<th align="right">complete</th>
+<th align="right">SE1</th>
+<th align="right">SE2</th>
+<th align="right">SE3</th>
+<th align="right">df1</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-None
-</td>
-<td style="text-align:right;">
-0.3981
-</td>
-<td style="text-align:right;">
-0.4015
-</td>
-<td style="text-align:right;">
-0.3991
-</td>
-<td style="text-align:right;">
-0.3995667
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
+<tr class="odd">
+<td align="left">None</td>
+<td align="right">0.3981</td>
+<td align="right">0.4015</td>
+<td align="right">0.3991</td>
+<td align="right">0.3995667</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.1360956</td>
+<td align="right">0.1360956</td>
+<td align="right">0.1360956</td>
+<td align="right">17</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:right;">
-0.2594
-</td>
-<td style="text-align:right;">
-0.2639
-</td>
-<td style="text-align:right;">
-0.2609
-</td>
-<td style="text-align:right;">
-0.2614000
-</td>
-<td style="text-align:right;">
-0.4085
-</td>
-<td style="text-align:right;">
-0.2336
-</td>
-<td style="text-align:right;">
-0.1676
-</td>
+<tr class="even">
+<td align="left">HO</td>
+<td align="right">0.2594</td>
+<td align="right">0.2639</td>
+<td align="right">0.2609</td>
+<td align="right">0.2614000</td>
+<td align="right">0.4085</td>
+<td align="right">0.2336</td>
+<td align="right">0.1676</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
 </tr>
 </tbody>
 </table>
@@ -875,35 +786,19 @@ power.</p>
 <span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; so estimation may take more time.</span></span></code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:left;">
-Sample.type
-</th>
-<th style="text-align:right;">
-Sample.size
-</th>
-<th style="text-align:right;">
-D1indiv.power
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="left">Sample.type</th>
+<th align="right">Sample.size</th>
+<th align="right">D1indiv.power</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:left;">
-nbar
-</td>
-<td style="text-align:right;">
-22296
-</td>
-<td style="text-align:right;">
-0.252
-</td>
+<tr class="odd">
+<td align="left">HO</td>
+<td align="left">nbar</td>
+<td align="right">22296</td>
+<td align="right">0.252</td>
 </tr>
 </tbody>
 </table>
@@ -942,84 +837,65 @@ function to see if the desired power is achieved. Let’s check a value of
 <span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    <span class="at">ICC.2 =</span> <span class="fl">0.1</span>, <span class="at">ICC.3 =</span> <span class="fl">0.1</span>,</span>
 <span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>    <span class="at">omega.2 =</span> <span class="dv">0</span>, <span class="at">omega.3 =</span> <span class="dv">0</span>, <span class="at">rho =</span> <span class="fl">0.5</span></span>
 <span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>)</span></code></pre></div>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="11%" />
+<col width="7%" />
+<col width="7%" />
+<col width="9%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="4%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:right;">
-D1indiv
-</th>
-<th style="text-align:right;">
-D2indiv
-</th>
-<th style="text-align:right;">
-D3indiv
-</th>
-<th style="text-align:right;">
-indiv.mean
-</th>
-<th style="text-align:right;">
-min1
-</th>
-<th style="text-align:right;">
-min2
-</th>
-<th style="text-align:right;">
-complete
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="right">D1indiv</th>
+<th align="right">D2indiv</th>
+<th align="right">D3indiv</th>
+<th align="right">indiv.mean</th>
+<th align="right">min1</th>
+<th align="right">min2</th>
+<th align="right">complete</th>
+<th align="right">SE1</th>
+<th align="right">SE2</th>
+<th align="right">SE3</th>
+<th align="right">df1</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-None
-</td>
-<td style="text-align:right;">
-0.3922
-</td>
-<td style="text-align:right;">
-0.3964
-</td>
-<td style="text-align:right;">
-0.3943
-</td>
-<td style="text-align:right;">
-0.3943000
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
-<td style="text-align:right;">
-</td>
+<tr class="odd">
+<td align="left">None</td>
+<td align="right">0.3922</td>
+<td align="right">0.3964</td>
+<td align="right">0.3943</td>
+<td align="right">0.3943000</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.1371496</td>
+<td align="right">0.1371496</td>
+<td align="right">0.1371496</td>
+<td align="right">17</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:right;">
-0.2545
-</td>
-<td style="text-align:right;">
-0.2590
-</td>
-<td style="text-align:right;">
-0.2549
-</td>
-<td style="text-align:right;">
-0.2561333
-</td>
-<td style="text-align:right;">
-0.4006
-</td>
-<td style="text-align:right;">
-0.2292
-</td>
-<td style="text-align:right;">
-0.1646
-</td>
+<tr class="even">
+<td align="left">HO</td>
+<td align="right">0.2545</td>
+<td align="right">0.2590</td>
+<td align="right">0.2549</td>
+<td align="right">0.2561333</td>
+<td align="right">0.4006</td>
+<td align="right">0.2292</td>
+<td align="right">0.1646</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
 </tr>
 </tbody>
 </table>
@@ -1050,35 +926,19 @@ somewhat conservative based on the curve.</p>
 <span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>)</span></code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:left;">
-Sample.type
-</th>
-<th style="text-align:right;">
-Sample.size
-</th>
-<th style="text-align:right;">
-D1indiv.power
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="left">Sample.type</th>
+<th align="right">Sample.size</th>
+<th align="right">D1indiv.power</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:left;">
-nbar
-</td>
-<td style="text-align:right;">
-45
-</td>
-<td style="text-align:right;">
-0.2595
-</td>
+<tr class="odd">
+<td align="left">HO</td>
+<td align="left">nbar</td>
+<td align="right">45</td>
+<td align="right">0.2595</td>
 </tr>
 </tbody>
 </table>
@@ -1120,35 +980,19 @@ than the point at which the power asymptotes.</p>
 <span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>)</span></code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-MTP
-</th>
-<th style="text-align:left;">
-Sample.type
-</th>
-<th style="text-align:right;">
-Sample.size
-</th>
-<th style="text-align:right;">
-D1indiv.power
-</th>
+<tr class="header">
+<th align="left">MTP</th>
+<th align="left">Sample.type</th>
+<th align="right">Sample.size</th>
+<th align="right">D1indiv.power</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HO
-</td>
-<td style="text-align:left;">
-nbar
-</td>
-<td style="text-align:right;">
-23631975
-</td>
-<td style="text-align:right;">
-0.2640118
-</td>
+<tr class="odd">
+<td align="left">HO</td>
+<td align="left">nbar</td>
+<td align="right">23631975</td>
+<td align="right">0.2640118</td>
 </tr>
 </tbody>
 </table>
