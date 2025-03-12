@@ -12,6 +12,7 @@ Estimates power, minimum detectable effect size (MDES) and sample size requireme
 Useful links:
 \itemize{
   \item \url{https://github.com/MDRCNY/PUMP}
+  \item \url{https://mdrcny.github.io/PUMP/}
   \item Report bugs at \url{https://github.com/MDRCNY/PUMP/issues}
 }
 
@@ -21,9 +22,9 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Kristen Hunter \email{kristen.hunter@unsw.edu.au} (\href{https://orcid.org/0000-0002-5678-4620}{ORCID})
+  \item Zarni Htet
   \item Kristin Porter \email{kristin.porter@keporterconsulting.com}
-  \item Kristen Hunter \email{kristenbhunter@gmail.com} (\href{https://orcid.org/0000-0002-5678-4620}{ORCID})
-  \item Zarni Htet \email{zarni.htet@mdrc.org}
 }
 
 Other contributors:

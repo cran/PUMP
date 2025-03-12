@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 options(knitr.kable.NA = '')
 library( dplyr )
 library( ggplot2 )
+library( ggthemes )
 library( here )
 library( kableExtra )
 library( knitr )
@@ -35,22 +36,22 @@ kable(info$Parameters, format = 'latex', booktabs = TRUE ) %>%
   kable_styling(position = "center")
 
 ## ----MDEScalc, eval = FALSE---------------------------------------------------
-#  m <- pump_mdes(
-#    d_m = "d3.2_m3fc2rc",         # choice of design and analysis strategy
-#    MTP = "HO",                   # multiple testing procedure
-#    target.power = 0.80,          # desired power
-#    power.definition = "D1indiv", # power type
-#    M = 5,                        # number of outcomes
-#    J = 3,                        # number of schools per block
-#    K = 21,                       # number districts
-#    nbar = 258,                   # average number of students per school
-#    Tbar = 0.50,                  # prop treated
-#    alpha = 0.05,                 # significance level
-#    numCovar.1 = 5,               # number of covariates at level 1
-#    numCovar.2 = 3,               # number of covariates at level 2
-#    R2.1 = 0.1, R2.2 = 0.7,       # explanatory power of covariates for each level
-#    ICC.2 = 0.05, ICC.3 = 0.4,    # intraclass correlation coefficients
-#    rho = 0.4 )                   # how correlated outcomes are
+# m <- pump_mdes(
+#   d_m = "d3.2_m3fc2rc",         # choice of design and analysis strategy
+#   MTP = "HO",                   # multiple testing procedure
+#   target.power = 0.80,          # desired power
+#   power.definition = "D1indiv", # power type
+#   M = 5,                        # number of outcomes
+#   J = 3,                        # number of schools per block
+#   K = 21,                       # number districts
+#   nbar = 258,                   # average number of students per school
+#   Tbar = 0.50,                  # prop treated
+#   alpha = 0.05,                 # significance level
+#   numCovar.1 = 5,               # number of covariates at level 1
+#   numCovar.2 = 3,               # number of covariates at level 2
+#   R2.1 = 0.1, R2.2 = 0.7,       # explanatory power of covariates for each level
+#   ICC.2 = 0.05, ICC.3 = 0.4,    # intraclass correlation coefficients
+#   rho = 0.4 )                   # how correlated outcomes are
 
 ## ----MDEScalc-compile, echo = FALSE-------------------------------------------
 if (recompile)
@@ -82,7 +83,7 @@ knitr::kable( m, digits = 3 ) %>%
   kableExtra::kable_styling( position = "center" )
 
 ## ----MDEScalcmin1, echo = TRUE, eval = FALSE----------------------------------
-#  m2 <- update( m, power.definition = "min1" )
+# m2 <- update( m, power.definition = "min1" )
 
 ## ----MDEScalcmin1-compile, echo = FALSE---------------------------------------
 if (recompile)
@@ -96,7 +97,7 @@ if (recompile)
 print( m2 )
 
 ## ----MDESwithNumZero, echo = TRUE, eval = FALSE-------------------------------
-#  m3 <- update( m2, numZero = 2 )
+# m3 <- update( m2, numZero = 2 )
 
 ## ----MDESwithNumZero-compile, echo = FALSE------------------------------------
 if (recompile)
@@ -110,16 +111,16 @@ if (recompile)
 print( m3 )
 
 ## ----samplesizecalc, eval = FALSE---------------------------------------------
-#  smp <- pump_sample(
-#    d_m = "d3.2_m3fc2rc",
-#    MTP = "HO",
-#    typesample = "K",
-#    target.power = 0.80, power.definition = "min1", tol = 0.01,
-#    MDES = 0.10, M = 5, nbar = 258, J = 3,
-#    Tbar = 0.50, alpha = 0.05, numCovar.1 = 5, numCovar.2 = 3,
-#    R2.1 = 0.1, R2.2 = 0.7, ICC.2 = 0.05, ICC.3 = 0.40, rho = 0.4 )
-#  
-#  print( smp )
+# smp <- pump_sample(
+#   d_m = "d3.2_m3fc2rc",
+#   MTP = "HO",
+#   typesample = "K",
+#   target.power = 0.80, power.definition = "min1", tol = 0.01,
+#   MDES = 0.10, M = 5, nbar = 258, J = 3,
+#   Tbar = 0.50, alpha = 0.05, numCovar.1 = 5, numCovar.2 = 3,
+#   R2.1 = 0.1, R2.2 = 0.7, ICC.2 = 0.05, ICC.3 = 0.40, rho = 0.4 )
+# 
+# print( smp )
 
 ## ----samplesizecalc-compile, echo = FALSE-------------------------------------
 if (recompile)
@@ -140,8 +141,8 @@ if (recompile)
 print( smp )
 
 ## ----samplesizeverify, eval = FALSE-------------------------------------------
-#  p_check <- update( smp, type = "power", tnum = 20000,
-#                     long.table = TRUE )
+# p_check <- update( smp, type = "power", tnum = 20000,
+#                    long.table = TRUE )
 
 ## ----samplesizeverify-compile, echo = FALSE-----------------------------------
 if (recompile)
@@ -160,7 +161,7 @@ knitr::kable( p_check, digits = 2 ) %>%
 plot( smp )
 
 ## ----powbase, eval = FALSE----------------------------------------------------
-#  pow <- update( p_check, tnum = 10000 )
+# pow <- update( p_check, tnum = 10000 )
 
 ## ----powbase-compile, echo = FALSE--------------------------------------------
 if (recompile)
@@ -173,9 +174,9 @@ if (recompile)
 }
 
 ## ----othercorrections, eval = FALSE-------------------------------------------
-#  p2 <- update( pow,
-#                MTP = c( "BF", "HO", "WY-SD" ) )
-#  plot( p2 )
+# p2 <- update( pow,
+#               MTP = c( "BF", "HO", "WY-SD" ) )
+# plot( p2 )
 
 ## ----othercorrections-compile, echo = FALSE-----------------------------------
 if (recompile)
@@ -190,8 +191,8 @@ if (recompile)
 plot( p2 )
 
 ## ----powICC, eval = FALSE-----------------------------------------------------
-#  p_b <- update( pow, ICC.2 = 0.20, ICC.3 = 0.25 )
-#  print( p_b )
+# p_b <- update( pow, ICC.2 = 0.20, ICC.3 = 0.25 )
+# print( p_b )
 
 ## ----powICC-compile, echo = FALSE---------------------------------------------
 if (recompile)
@@ -205,10 +206,10 @@ if (recompile)
 print( p_b )
 
 ## ----powR2, eval = FALSE------------------------------------------------------
-#  p_d <- update( pow,
-#            	   R2.1 = c( 0.1, 0.3, 0.1, 0.2, 0.2 ),
-#            	   R2.2 = c( 0.4, 0.8, 0.3, 0.2, 0.2 ) )
-#  print( p_d )
+# p_d <- update( pow,
+#           	   R2.1 = c( 0.1, 0.3, 0.1, 0.2, 0.2 ),
+#           	   R2.2 = c( 0.4, 0.8, 0.3, 0.2, 0.2 ) )
+# print( p_d )
 
 ## ----powR2-compile, echo = FALSE----------------------------------------------
 if (recompile)
@@ -227,11 +228,11 @@ print( p_d )
 summary( p_d )
 
 ## ----ICCgrid, eval = FALSE----------------------------------------------------
-#  grid <- update_grid( pow,
-#          	ICC.2 = seq( 0, 0.3, 0.05 ),
-#          	ICC.3 = seq( 0, 0.60, 0.20 ) )
-#  
-#  plot( grid, power.definition = "min1" )
+# grid <- update_grid( pow,
+#         	ICC.2 = seq( 0, 0.3, 0.05 ),
+#         	ICC.3 = seq( 0, 0.60, 0.20 ) )
+# 
+# plot( grid, power.definition = "min1" )
 
 ## ----ICCgrid-compile, echo = FALSE--------------------------------------------
 if (recompile)
@@ -247,11 +248,11 @@ if (recompile)
 plot( grid, power.definition = "min1" )
 
 ## ----rhogrid, eval = FALSE----------------------------------------------------
-#  gridRho <- update_grid( pow,
-#          	  MTP = c( "BF", "WY-SD" ),
-#          	  rho = seq( 0, 0.9, by = 0.15 ),
-#          	  tnum = 1000,
-#          	  B = 3000 )
+# gridRho <- update_grid( pow,
+#         	  MTP = c( "BF", "WY-SD" ),
+#         	  rho = seq( 0, 0.9, by = 0.15 ),
+#         	  tnum = 1000,
+#         	  B = 3000 )
 
 ## ----rhogrid-compile, echo = FALSE--------------------------------------------
 if (recompile)
@@ -271,10 +272,10 @@ if (recompile)
 plot( gridRho )
 
 ## ----numzerogrid, fig.height = 2.5, eval = FALSE------------------------------
-#  gridZero <- update_grid( pow,
-#          	             numZero = 0:4,
-#                           M = 5 )
-#  plot( gridZero, nrow = 1 )
+# gridZero <- update_grid( pow,
+#         	             numZero = 0:4,
+#                          M = 5 )
+# plot( gridZero, nrow = 1 )
 
 ## ----numzerogrid-compile, echo = FALSE, fig.height = 2.5----------------------
 if (recompile)

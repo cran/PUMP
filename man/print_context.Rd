@@ -5,7 +5,13 @@
 \title{Print context (design, model, parameter values) of 
 pumpresult or pumpgridresult (result function)}
 \usage{
-print_context(x, insert_results = FALSE, insert_control = FALSE, ...)
+print_context(
+  x,
+  insert_results = FALSE,
+  insert_control = FALSE,
+  include_SE = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{A pumpresult object or pumpgridresult object.}
@@ -13,6 +19,8 @@ print_context(x, insert_results = FALSE, insert_control = FALSE, ...)
 \item{insert_results}{Include actual results in the printout.}
 
 \item{insert_control}{Include the optimizer control parameter information.}
+
+\item{include_SE}{Include standard errors in the printout.}
 
 \item{...}{Extra arguments to pass to print.pumpresult.}
 }
